@@ -257,7 +257,7 @@
     function probeInto(box, ch, py, mean) {
       if (!box) return;
       var token = (box._picToken = (box._picToken || 0) + 1);
-      var sources = ["img/" + ch + ".png", "img/" + ch + "1.png"];
+      var sources = ["img/" + ch + ".jpg", "img/" + ch + "1.jpg", "img/" + ch + ".png", "img/" + ch + "1.png"];
       function attempt(i) {
         if (token !== box._picToken) return;
         var probe = new Image();
