@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#241b20">
+  <title>Урок 1. Ключи · Мастерская Синнабона</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/tone.css">
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js" defer></script>
+  <script src="assets/site-common.js" defer></script>
+  <script src="assets/lesson1.js" defer></script>
+  <style>
+    :root {
+      --bg: #241b20;
+      --ink: #f5e8d3;
+      --gold: #f4cc85;
+      --teal: #80e5dc;
+      --lilac: #cbb1fb;
+      --paper: #efdbb3;
+      --paper-ink: #3d2c34;
+      --wood: #6b4844;
+      --wood-light: #9d6d58;
+      --wood-dark: #3a2a2e;
+      --ok: #8ac8a9;
+      --bad: #e57373;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Nunito", "Noto Sans SC", "Segoe UI", sans-serif;
+      background: radial-gradient(ellipse at 50% 0, #4a3226, transparent 60%), #241b20;
+      color: var(--ink);
+      overflow-wrap: anywhere;
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; touch-action: manipulation; cursor: pointer; }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
+    [hidden] { display: none !important; }
+    h1, h2, h3, p { margin: 0; }
+    .hanzi-inline { font-family: "Noto Sans SC", sans-serif; font-weight: 400; }
+    .lesson-shell {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: max(14px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) max(26px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+    }
+    .skip-link { position: fixed; top: -150px; left: 14px; z-index: 100; background: #2e2229; border: 3px solid var(--gold); color: #fff; padding: 12px; max-width: calc(100% - 28px); }
+    .skip-link:focus { top: 14px; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      padding: 8px 12px; margin: 0 0 16px;
+      background: #2b2027ee;
+      border: 3px solid #4d3b45; border-radius: 10px;
+      color: #d8c6b8; font-size: 11.5px;
+      backdrop-filter: blur(4px);
+    }
+    .route-label { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+    .route-label::before { content: ""; width: 8px; height: 8px; background: var(--gold); box-shadow: 0 0 0 3px #574433; flex-shrink: 0; }
+    .floor-track { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    .floor-track button {
+      --c: #d8c6b8;
+      position: relative;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px 4px 7px; background: #463339; border: 0; border-bottom: 3px solid #191218;
+      color: #d8c6b8; font-size: 10.5px; font-weight: 800; border-radius: 4px 4px 0 0;
+      transition: background .12s ease, color .12s ease, transform .12s ease;
+    }
+    .floor-track button .f-ico { display: inline-flex; width: 13px; height: 13px; color: var(--c); flex-shrink: 0; }
+    .floor-track button .f-ico svg { width: 100%; height: 100%; }
+    .floor-track button .f-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 16px; height: 16px; padding: 0 2px; font-size: 9.5px;
+      background: var(--c); color: #241b20; border-radius: 3px; box-shadow: 1px 1px 0 #191218;
+    }
+    .floor-track button:hover { background: #57414a; }
+    .floor-track button.done { background: #57414a; }
+    .floor-track button.done .f-num { background: transparent; border: 2px solid var(--c); box-shadow: none; color: var(--c); }
+    .floor-track button.done .f-label { opacity: .8; }
+    .floor-track button.current {
+      background: var(--c); color: #241b20; border-bottom-color: #0f0c12;
+      transform: translateY(1px);
+    }
+    .floor-track button.current .f-ico { color: #241b20; }
+    .floor-track button.current .f-num { background: #241b20; color: var(--c); box-shadow: none; }
+    .floor-track button.current::after {
+      content: ""; position: absolute; top: 100%; left: 50%; margin-left: -4px;
+      border: 4px solid transparent; border-top-color: var(--c);
+    }
+
+    .workshop-room {
+      position: relative;
+      isolation: isolate;
+      border: 6px solid #241d2c; border-radius: 6px;
+      background:
+        radial-gradient(ellipse at 85% 10%, #8c6a4455, transparent 34%),
+        repeating-linear-gradient(180deg, #3a2a2e 0 36px, #2f2226 36px 40px);
+      box-shadow: 0 0 0 2px #7a5a4a, 8px 8px #0f0c12;
+    }
+    .roof-beam { height: 20px; background: repeating-linear-gradient(90deg, #6b4844 0 46px, #57383a 46px 50px); border-bottom: 6px solid #241a20; box-shadow: 0 4px #8a6250; border-radius: 2px 2px 0 0; }
+    .workshop-room::before, .workshop-room::after { content: ""; position: absolute; top: 24px; bottom: 58px; width: 13px; background: repeating-linear-gradient(0deg, #5e4348 0 32px, #342830 32px 36px); border-left: 4px solid #86605a; border-right: 4px solid #241d2c; z-index: -1; pointer-events: none; }
+    .workshop-room::before { left: 0; }
+    .workshop-room::after { right: 0; }
+    .workshop-scene { display: grid; grid-template-columns: minmax(96px, 1fr) minmax(0, 2.1fr) minmax(110px, 1.1fr); gap: 20px; align-items: center; padding: 20px 26px 14px; }
+
+    .window-corner { position: relative; padding: 10px 6px 0; }
+    .workshop-window { position: relative; height: 132px; border: 8px solid #6e5260; border-bottom-color: #b08070; background: linear-gradient(180deg, #8fd3e8 0 62%, #cfeef2 62%); box-shadow: inset 0 0 0 4px #62808c, 0 0 30px #ffd98c33, 6px 6px #201a2b; border-radius: 2px; }
+    .workshop-window::before { content: ""; position: absolute; left: calc(50% - 3px); top: 0; bottom: 0; width: 6px; background: #725565; z-index: 2; }
+    .workshop-window::after { content: ""; position: absolute; left: 0; right: 0; top: 52%; height: 6px; background: #725565; z-index: 2; }
+    .pixel-sun { position: absolute; top: 14px; right: 16px; width: 22px; height: 22px; background: #ffd54f; box-shadow: 4px 0 #ffd54f, -4px 0 #ffd54f, 0 4px #ffd54f, 0 -4px #ffd54f, 8px 0 #ffca28, -8px 0 #ffca28, 0 8px #ffca28, 0 -8px #ffca28, 0 0 26px #ffd54f66; }
+    .pixel-cloud { position: absolute; top: 22px; left: 14px; width: 20px; height: 8px; background: #fff; opacity: .9; }
+    .pixel-cloud::after { content: ""; position: absolute; top: -6px; left: 5px; width: 10px; height: 8px; background: #fff; }
+    .pixel-cloud.small { top: 48px; left: 44px; transform: scale(.7); }
+    .workshop-hills { position: absolute; left: 0; right: 0; bottom: 0; height: 30px; background: linear-gradient(135deg, transparent 22%, #6fae6a 22% 52%, transparent 52%), linear-gradient(225deg, transparent 30%, #4f8f57 30% 72%, #3d7349 72%); }
+    .window-sill { height: 8px; background: #b08070; margin: 0 -5px; box-shadow: 0 4px #392a39; }
+    .window-planter { position: absolute; bottom: 8px; left: 14px; width: 18px; height: 12px; background: #a05a44; box-shadow: inset 0 -3px #7c4436; }
+    .window-planter::before { content: ""; position: absolute; top: -8px; left: 3px; width: 5px; height: 8px; background: #5fae57; box-shadow: 7px 0 #4f8f57; }
+
+    .workshop-sign { position: relative; text-align: center; padding: 18px 12px 14px; background: repeating-linear-gradient(0deg, #543742 0 30px, #3b2b36 30px 34px); border: 4px solid #ad7b5a; border-radius: 4px; box-shadow: inset 0 0 0 4px #302333, 0 6px #221a2a, 6px 0 #221a2a, -6px 0 #221a2a; }
+    .workshop-sign::before, .workshop-sign::after { content: ""; position: absolute; top: -30px; width: 4px; height: 26px; background: repeating-linear-gradient(0deg, #a18483 0 6px, #473749 6px 10px); }
+    .workshop-sign::before { left: 26px; }
+    .workshop-sign::after { right: 26px; }
+    .sign-label { color: #e0c0b0; font-size: 9.5px; letter-spacing: .13em; font-weight: 800; text-transform: uppercase; }
+    .workshop-sign h1 { font-family: "Courier New", monospace; font-size: clamp(19px, 2.8vw, 30px); line-height: 1.15; color: var(--gold); margin: 8px 0 8px; text-shadow: 3px 3px #261d2c; }
+    .sign-brush { margin: 0 auto; width: 44px; height: 20px; }
+    .sign-brush .brush-handle { height: 12px; margin: 0 auto; width: 6px; background: linear-gradient(180deg, #c99a72, #8a6250); box-shadow: inset -2px 0 #5e4348; }
+    .sign-brush .brush-tip { width: 10px; height: 8px; margin: 0 auto; background: linear-gradient(180deg, #2b2b33, #17171d); border-radius: 0 0 6px 6px; }
+
+    .tool-wall { align-self: center; display: grid; gap: 14px; padding: 4px 6px; }
+    .tool-bar { height: 10px; background: linear-gradient(180deg, #8a6250, #6b4844); border-radius: 3px; box-shadow: 0 3px #241a20; }
+    .tool-row { display: flex; justify-content: space-around; align-items: start; }
+    .tool { position: relative; }
+    .tool::before { content: ""; position: absolute; top: -5px; left: 50%; width: 8px; height: 8px; margin-left: -4px; background: #b8d2cf; border-radius: 50%; box-shadow: inset -2px -2px #62808c; }
+    .tool-saw { width: 14px; height: 52px; background: linear-gradient(90deg, #cdd8d6 0 6px, #9fb2b0 6px); }
+    .tool-saw::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: -6px; height: 8px; background: conic-gradient(from 0deg, #cdd8d6 0 25%, transparent 0 50%) 0 0/8px 8px; }
+    .tool-hammer { width: 26px; height: 50px; }
+    .tool-hammer .h-head { width: 26px; height: 12px; background: linear-gradient(90deg, #8f9aa8, #62808c); border-radius: 2px; }
+    .tool-hammer .h-handle { width: 7px; height: 38px; margin: 0 auto; background: linear-gradient(180deg, #c99a72, #8a6250); box-shadow: inset -2px 0 #5e4348; }
+    .tool-brush { width: 10px; height: 50px; }
+    .tool-brush .b-handle { width: 8px; height: 36px; margin: 0 auto; background: linear-gradient(180deg, #d8b98a, #a2795c); box-shadow: inset -2px 0 #6e4f45; }
+    .tool-brush .b-tip { width: 12px; height: 12px; margin: 0 auto; background: linear-gradient(180deg, #2b2b33, #101016); border-radius: 0 0 7px 7px; }
+    .inkpot-shelf { display: flex; justify-content: center; gap: 8px; align-items: end; border-bottom: 7px solid #8a5a48; box-shadow: 0 3px #241a20; padding-bottom: 2px; }
+    .inkpot { position: relative; display: block; width: 18px; height: 22px; border: 3px solid #8aa6ae; background: linear-gradient(0deg, #80e5dc 0 42%, #253a51 42%); box-shadow: inset 2px 0 #ffffff22; }
+    .inkpot::before { content: ""; position: absolute; width: 8px; height: 6px; left: 2px; top: -9px; background: #8aa6ae; }
+    .inkpot.violet { background: linear-gradient(0deg, #be94ef 0 46%, #253a51 46%); height: 26px; }
+    .inkpot.amber { background: linear-gradient(0deg, #e9b966 0 40%, #253a51 40%); height: 18px; width: 15px; }
+
+    .welcome { position: relative; display: grid; grid-template-columns: 158px minmax(0, 1fr); gap: 20px; align-items: end; margin: 0 26px 26px; padding: 0 18px 22px; }
+    .workbench { position: absolute; left: 0; right: 0; bottom: 0; height: 26px; background: repeating-linear-gradient(90deg, #7a5145 0 88px, #5e3d3a 88px 92px); border-top: 8px solid #b47f60; border-bottom: 4px solid #241a20; box-shadow: 0 5px #170f14; }
+    .workbench::before { content: ""; position: absolute; top: -8px; left: 18px; width: 6px; height: 6px; background: #3d2c2e; box-shadow: 140px 0 #3d2c2e, 300px 0 #3d2c2e, 440px 0 #3d2c2e; }
+    .host { position: relative; z-index: 1; text-align: center; padding-top: 8px; }
+    .host img { display: block; width: 138px; height: 138px; margin: 0 auto -3px; image-rendering: pixelated; filter: drop-shadow(4px 4px #201a2b); }
+    .host-name { position: relative; z-index: 1; display: inline-block; padding: 4px 14px; background: #3a2a35; border: 2px solid #b08d5c; border-radius: 10px; color: var(--gold); font-size: 13px; font-weight: 800; }
+    .dialogue { position: relative; min-width: 0; background: #2c222c; border: 3px solid #b08d5c; border-radius: 4px; padding: 14px 18px; margin-bottom: 14px; box-shadow: 4px 0 #4d3b45, -4px 0 #4d3b45, 0 4px #4d3b45, 0 -4px #4d3b45, 6px 6px #171017; }
+    .dialogue::before { content: ""; position: absolute; left: -15px; bottom: 24px; width: 12px; height: 12px; background: #2c222c; border-left: 3px solid #b08d5c; border-bottom: 3px solid #b08d5c; }
+    .dialogue-heading { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; color: var(--gold); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; }
+    .dialogue-heading span:last-child { color: var(--teal); letter-spacing: 0; }
+    .dialogue h2 { font-size: 18px; color: #fff2d9; margin-bottom: 6px; line-height: 1.25; }
+    #cinnabon-bubble { font-size: 13px; line-height: 1.6; color: #e8dccc; }
+    #cinnabon-bubble b { color: var(--gold); }
+    .work-lamp { position: absolute; top: 22px; width: 15px; height: 32px; border: 3px solid #ad7756; background: linear-gradient(90deg, #edb363 0 30%, #ffe6ae 30% 70%, #edb363 70%); box-shadow: 0 0 26px 10px #ffc77522; pointer-events: none; }
+    .work-lamp::before { content: ""; position: absolute; top: -20px; left: 3px; width: 4px; height: 18px; background: #9b7865; }
+    .work-lamp::after { content: ""; position: absolute; left: -6px; right: -6px; bottom: -6px; height: 4px; background: #b88b67; box-shadow: 0 -34px #b88b67; }
+    .work-lamp.left { left: -8px; }
+    .work-lamp.right { right: -8px; }
+    .floor { height: 24px; border-top: 6px solid #342535; background: repeating-linear-gradient(90deg, #6b4a49 0 96px, #46333c 96px 100px); box-shadow: inset 0 -4px #493341; }
+
+    .level-section {
+      position: relative; margin-top: 26px; padding: 20px 22px 24px;
+      background: #261d25; border: 4px solid #4d3b45; border-radius: 6px;
+      box-shadow: 0 0 0 3px #191218, 6px 6px #0f0c12;
+      scroll-margin-top: 68px;
+    }
+    .section-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+    .level-badge {
+      display: inline-block; padding: 5px 10px; font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .1em; color: #241b20;
+      background: var(--teal); border-radius: 3px; box-shadow: 3px 3px #14101f;
+    }
+    .level-badge.n2 { background: var(--lilac); }
+    .level-badge.n3 { background: var(--gold); }
+    .level-badge.n4 { background: #a8d5a0; }
+    .level-badge.gold { background: var(--gold); }
+    .level-section h2 { font-size: clamp(18px, 2.6vw, 24px); color: #ffe9c4; line-height: 1.25; }
+    .level-lead { color: #d9c8c0; font-size: 12.5px; line-height: 1.55; margin: 6px 0 2px; max-width: 760px; }
+    .level-lead b { color: #fff2d9; }
+    .cinnabon-tip { display: flex; align-items: center; gap: 12px; margin: 12px 0 14px; padding: 9px 13px; background: #2c222c; border: 3px solid #5c473f; border-radius: 10px; }
+    .cinnabon-tip img { width: 46px; height: 46px; flex-shrink: 0; image-rendering: pixelated; filter: drop-shadow(2px 2px #201a2b); }
+    .cinnabon-tip p { font-size: 12px; line-height: 1.5; color: #e8dccc; }
+    .cinnabon-tip p b { color: var(--gold); }
+
+    .glyph-card {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      color: var(--paper-ink); border: 4px solid #674651; border-bottom-width: 7px; border-radius: 3px;
+      box-shadow: 0 4px #c09c7a, 0 7px #4a3341, 4px 7px #181422, -4px 7px #181422;
+    }
+    .book-page { padding: 16px 14px; background: linear-gradient(90deg, #dfc396, #f5e4c3 12%, #efdbb3 92%, #c5a17b); min-width: 0; }
+    .glyph-display { display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 2px solid #967658; background: linear-gradient(90deg, #efdbb3 0 88%, #dac098 95%, #af8d70); }
+    .page-label { font-size: 9px; color: #705663; letter-spacing: .13em; font-weight: 800; text-transform: uppercase; }
+    .glyph { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 74px; line-height: 1.1; font-weight: 400; margin: 6px 0 0; }
+    .reading { font-size: 20px; font-weight: 800; }
+    .tone-label { display: flex; align-items: center; gap: 5px; color: #34596d; font-size: 10px; margin-top: 4px; }
+    .tone-label::before { content: ""; width: 6px; height: 6px; background: var(--tone); }
+    .page-number { display: block; font: 10px/1.4 monospace; color: #84634f; margin-top: 10px; text-align: center; }
+    .glyph-info { display: flex; flex-direction: column; justify-content: center; }
+    .glyph-info h3 { font-size: 22px; margin: 5px 0 8px; color: #4a3341; }
+    .glyph-info dl { margin: 0; }
+    .detail { display: flex; justify-content: space-between; gap: 8px; padding: 5px 0; border-top: 1px solid #c5a681; font-size: 11.5px; }
+    .detail dt { color: #705c51; }
+    .detail dd { margin: 0; text-align: right; font-weight: 800; }
+    .sound-button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 7px;
+      background: #ddebec; color: #245d71; border: 2px solid #5b8993; border-radius: 3px;
+      box-shadow: 0 3px #a49174; font-size: 11.5px; font-weight: 800; margin: 10px 0 2px;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .sound-button svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .sound-button:hover { background: #ecf8f5; }
+    .sound-button.speaking { outline: 3px solid #29b6f6; outline-offset: 2px; }
+
+    .keys-grid { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 9px; }
+    .keys-grid .key-tile { min-width: 0; }
+    .key-tile {
+      position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px;
+      min-height: 118px; padding: 18px 7px 9px; background: var(--paper); color: var(--paper-ink);
+      border: 3px solid #674651; border-bottom-width: 5px; border-radius: 3px;
+      box-shadow: 3px 3px #14101f; text-align: center; transition: transform .12s ease;
+    }
+    .key-tile:hover { transform: translateY(-2px); }
+    .key-tile:active { transform: translateY(2px); }
+    .key-tile.speaking { outline: 3px solid #29b6f6; outline-offset: 2px; }
+    .key-tile.active { border-color: #0777a7; box-shadow: 0 0 0 3px #0777a7, 3px 3px #14101f; }
+    .key-tile.paged { animation: tileIn .3s ease backwards; }
+    @keyframes tileIn { from { opacity: 0; transform: translateY(8px) scale(.92); } to { opacity: 1; transform: none; } }
+    .key-num { position: absolute; top: 4px; left: 6px; font-size: 9px; font-weight: 800; color: #705c51; }
+    .key-strokes { position: absolute; top: 4px; right: 6px; font-size: 9px; font-weight: 800; color: #705c51; }
+    .key-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 42px; line-height: 1.05; }
+    .key-pinyin { font-size: 11px; font-weight: 800; }
+    .key-meaning { font-size: 10px; color: #5c4a58; line-height: 1.25; min-height: 2.5em; display: flex; align-items: center; justify-content: center; }
+    .keys-note { font-size: 11px; color: #cdb8b0; margin: 12px 0 0; }
+
+    .gallery-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; margin-top: 18px; }
+    .gd-pictures:empty { display: none; }
+    .gd-pictures img { display: block; width: 100%; max-width: 460px; margin: 0 auto; border: 4px solid #b08d5c; border-radius: 4px; background: #fff8e6; box-shadow: 4px 4px #191423; }
+    .object-label { display: flex; align-items: center; gap: 9px; color: #d7bddf; font-size: 9.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .object-label::before { content: ""; width: 7px; height: 7px; background: var(--lilac); box-shadow: 0 0 0 2px #5f456e; }
+
+    .inside-grid { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 18px; align-items: start; }
+    .inside-panel { display: flex; flex-direction: column; gap: 10px; }
+    .ip-shelf { display: grid; gap: 8px; align-content: start; }
+    .ip-tile {
+      display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+      background: var(--paper); color: var(--paper-ink); border: 3px solid #674651; border-bottom-width: 5px;
+      border-radius: 3px; box-shadow: 3px 3px #14101f; text-align: left; transition: transform .12s ease;
+    }
+    .ip-tile:hover { transform: translateY(-2px); }
+    .ip-tile:active { transform: translateY(2px); }
+    .ip-tile.active { border-color: #0777a7; box-shadow: 0 0 0 3px #0777a7, 3px 3px #14101f; }
+    .ip-tile.speaking { outline: 3px solid #29b6f6; outline-offset: 2px; }
+    .ip-tile .t-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 30px; line-height: 1.05; }
+    .ip-tile .t-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+    .ip-tile .t-py { font-size: 10.5px; font-weight: 800; }
+    .ip-tile .t-mean { font-size: 9.5px; color: #5c4a58; line-height: 1.2; }
+
+    .ip-head {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 10px 14px; background: var(--paper); color: var(--paper-ink);
+      border: 3px solid #674651; border-bottom-width: 5px; border-radius: 3px;
+      box-shadow: 3px 3px #14101f;
+    }
+    .ip-full { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 52px; line-height: 1; color: #3d2c34; }
+    .ip-head-arrow { font-size: 20px; font-weight: 800; color: #967658; }
+    .ip-form { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 48px; line-height: 1; color: #0b7a72; }
+    .ip-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .ip-form-name { font-size: 10px; font-weight: 800; color: #0b7a72; }
+    .ip-pos { font-size: 10px; font-weight: 800; color: #705c51; }
+
+    .ip-ex {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px; align-items: start; padding: 14px 16px;
+      background: var(--paper); color: var(--paper-ink);
+      border: 3px solid #674651; border-bottom-width: 5px; border-radius: 3px;
+      box-shadow: 3px 3px #14101f;
+    }
+    .ip-build { display: flex; flex-direction: column; align-items: center; gap: 12px; min-width: 0; }
+    .ip-pictures:empty { display: none; }
+    .ip-pictures img { display: block; width: 100%; max-width: 420px; margin: 0 auto; border: 4px solid #b08d5c; border-radius: 4px; background: #fff8e6; box-shadow: 4px 4px #191423; }
+    .ip-pictures.veiled { opacity: .7; filter: blur(12px); }
+    .ip-words { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ip-word {
+      display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 16px;
+      background: var(--paper); color: var(--paper-ink); border: 3px solid #674651; border-bottom-width: 5px;
+      border-radius: 3px; box-shadow: 3px 3px #14101f; transition: transform .12s ease;
+    }
+    .ip-word:hover { transform: translateY(-2px); }
+    .ip-word:active { transform: translateY(2px); }
+    .ip-word.active { border-color: #0777a7; box-shadow: 0 0 0 3px #0777a7, 3px 3px #14101f; }
+    .ip-word .w-py { font-size: 13px; font-weight: 800; }
+    .ip-word .w-tr { font-size: 10px; color: #5c4a58; }
+    .ip-plate {
+      min-width: 108px; min-height: 108px; display: flex; align-items: center; justify-content: center;
+      padding: 10px; background: #fff8e6; border: 3px solid #b08d5c; border-radius: 4px;
+      box-shadow: 0 3px #c5a681;
+    }
+    .ip-plate .q { color: #b09a7d; font-family: "Nunito", sans-serif; font-weight: 800; font-size: 34px; }
+    .ip-plate .ch { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 58px; line-height: 1; color: #3d2c34; }
+    .ip-plate.assembled { background: #fff2cf; border-color: #0f8f86; box-shadow: 0 0 0 3px #f4cc8566, 0 3px #c5a681; animation: platePop .5s cubic-bezier(.2, 1.6, .4, 1); }
+    @keyframes platePop { from { transform: scale(.3); opacity: 0; } to { transform: none; opacity: 1; } }
+    .ip-parts { font-family: "Noto Sans SC", "KaiTi", "STKaiti", serif; font-size: 38px; line-height: 1.05; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 6px; min-height: 78px; }
+    .ip-parts.stack { flex-direction: column; gap: 6px; font-size: 34px; line-height: .92; }
+    .ip-parts.stack span { padding: 2px 8px; }
+    .ip-parts.stack .s-1 { font-size: .52em; }
+    .ip-parts.stack .s-2 { font-size: .56em; }
+    .ip-parts.stack .s-3 { font-size: .5em; }
+    .ip-parts span {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 1.3em; padding: 6px 10px;
+      background: #f6ede0; color: #7b4fae;
+      border: 3px solid #8a5fb8; border-bottom-width: 6px; border-radius: 6px;
+      box-shadow: 2px 2px 0 #191423; cursor: pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .ip-parts span.r-part { background: #e2f6f3; border-color: #0f8f86; color: #0b7a72; }
+    .ip-parts span:hover { transform: translateY(-2px); background: #fff8e6; }
+    .ip-parts span:active { transform: translateY(2px); box-shadow: none; }
+    .ip-parts span:focus-visible { outline: 3px solid #29b6f6; outline-offset: 2px; }
+    .ip-parts span.active {
+      background: #fff2cf; border-color: #0777a7;
+      box-shadow: 0 0 0 3px #0777a7, 2px 2px 0 #191423;
+    }
+    .ip-ex-info { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; text-align: center; }
+    .ip-ex-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .ip-ex-py { font-size: 18px; font-weight: 800; }
+    .ip-ex-tr { font-size: 12px; font-weight: 800; color: #5c4a58; }
+    .ip-ex .sound-button { min-height: 32px; margin: 0; padding: 4px 8px; font-size: 10.5px; align-self: center; }
+    .ip-note { font-size: 11px; line-height: 1.45; color: #4a3341; background: #fff8e6; border: 2px dashed #c5a681; border-radius: 3px; padding: 7px 9px; }
+    .ip-note b.rad { color: #0f8f86; }
+    .ip-note b.pho { color: #8a5fb8; }
+
+    .inkpot-deco { position: absolute; right: 4px; bottom: 5px; width: 16px; height: 18px; border: 3px solid #8aa6ae; background: #253a51; box-shadow: 3px 3px #261e2d; }
+    .inkpot-deco::before { content: ""; position: absolute; width: 4px; height: 28px; background: #cbb1fb; bottom: 11px; left: 8px; transform: rotate(20deg); border-top: 5px solid #f0dcff; }
+    .writer-panel {
+      position: relative; padding: 18px 18px 22px;
+      background: repeating-linear-gradient(0deg, #503640 0 56px, #342735 56px 60px);
+      border: 4px solid #97705b; border-top-color: #c19672; border-radius: 4px;
+      box-shadow: inset 0 0 0 3px #352632, 5px 5px #191423;
+      scroll-margin-top: 24px;
+    }
+    .writer-heading { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+    .writer-heading h3 { font-size: 20px; color: #ffe3b8; }
+    .practice-badge { display: inline-block; padding: 4px 7px; border: 2px solid #80aaa2; background: #243e43; color: var(--teal); font-size: 9.5px; font-weight: 800; border-radius: 3px; }
+    .desk-instruction { color: #e4cbbc; font-size: 11.5px; line-height: 1.45; margin-top: 6px; }
+    .sel-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; margin: 14px 0; }
+    .sel-tile {
+      display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px 6px;
+      background: var(--paper); color: var(--paper-ink); border: 3px solid #674651; border-bottom-width: 5px;
+      border-radius: 3px; box-shadow: 3px 3px #14101f; text-align: center; transition: transform .12s ease;
+    }
+    .sel-tile:hover { transform: translateY(-2px); }
+    .sel-tile:active { transform: translateY(2px); }
+    .sel-tile .s-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 30px; line-height: 1.05; }
+    .sel-tile .s-py { font-size: 10px; font-weight: 800; }
+    .sel-tile.active { border-color: #0777a7; box-shadow: 0 0 0 3px #0777a7, 3px 3px #14101f; }
+    .paper-wrap { position: relative; margin: 14px 0 12px; }
+    .writing-paper { width: min(100%, 224px); aspect-ratio: 1; position: relative; margin: 0 auto; border: 4px solid #c7a477; background: #fff0cf; border-radius: 2px; box-shadow: 4px 4px #2f2230, inset 0 0 0 3px #efdbb3; }
+    .writing-paper::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px dashed #c9ac85; }
+    .writing-paper::after { content: ""; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px dashed #c9ac85; }
+    .writer-target { width: 100%; height: 100%; position: relative; z-index: 1; touch-action: none; }
+    .writer-target svg { display: block; }
+
+    .status-text { min-height: 2.8em; color: #f1ddce; font-size: 12px; line-height: 1.45; text-align: center; margin-bottom: 8px; }
+    .stroke-progress { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 9px; margin-bottom: 14px; }
+    .stroke-dots { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+    .stroke-dots span { width: 15px; height: 7px; border: 1px solid #b69caa; background: #342738; border-radius: 2px; }
+    .stroke-dots .done { background: #29b6f6; border-color: #9bdcff; }
+    .progress-text { font-size: 11.5px; font-weight: 800; color: #ead3dc; }
+    .writer-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+    .action-button {
+      min-height: 42px; padding: 9px 8px; border: 2px solid #ad90c5; border-radius: 3px;
+      background: #4e385f; color: #f1e7ff; box-shadow: 0 4px #211829;
+      font-size: 11.5px; font-weight: 800; transition: transform .12s ease, background .12s ease;
+    }
+    .action-button:hover { background: #644479; }
+    .action-button.primary { background: #2d555a; color: #d6fff4; border-color: #89c8bd; }
+    .action-button.primary:hover { background: #396b6d; }
+    .action-button:active, .sound-button:active { transform: translateY(3px); box-shadow: 0 1px #211829; }
+    .success-msg { background: #24423e; border: 2px solid #8ac8a9; color: #e0ffe5; padding: 10px; margin-top: 14px; font-size: 12px; line-height: 1.45; text-align: center; border-radius: 4px; }
+
+    .finale-actions { display: flex; justify-content: center; }
+    .lesson-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 11px 16px; margin-top: 18px; background: #211b2e; border-radius: 8px; color: #c8b6b0; font-size: 10.5px; }
+    .footer-location { color: var(--gold); }
+    #voice-tip { display: none; color: #ffe5bd; background: #593d39; border: 2px solid #c99a72; padding: 10px; margin: 16px 0 0; border-radius: 6px; font-size: 12px; line-height: 1.5; }
+
+    .stamp-seal {
+      position: absolute; display: flex; align-items: center; justify-content: center;
+      background: #c9564c; color: #fff; font-family: "KaiTi", "STKaiti", serif;
+      border-radius: 4px; transform: rotate(-8deg);
+      box-shadow: 2px 2px #00000055, inset 0 0 0 2px #ffffff88;
+      animation: stampIn .35s cubic-bezier(.2, 1.6, .4, 1); pointer-events: none; z-index: 4;
+    }
+    @keyframes stampIn { from { transform: rotate(-8deg) scale(1.7); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
+    .ip-ex .stamp-seal { right: 10px; bottom: 10px; width: 32px; height: 32px; font-size: 21px; }
+    .ip-ex { position: relative; }
+    .ip-ex::before, .ip-ex::after {
+      content: ""; position: absolute; width: 9px; height: 9px; z-index: 2;
+      border: 2px solid #967658; border-radius: 50%; background: #c5a681; box-shadow: inset -2px -2px #8a6d54;
+    }
+    .ip-ex::before { left: 5px; top: 5px; }
+    .ip-ex::after { right: 5px; top: 5px; }
+    .ip-parts span.done { background: #0f8f86; border-color: #80e5dc; color: #ffffff; box-shadow: 0 0 10px #80e5dc55; }
+    .ip-parts span.done.r-part { border-color: #f4cc85; box-shadow: 0 0 10px #f4cc8566; }
+    .ip-parts span.done:hover { transform: none; background: #0f8f86; }
+    .veiled { opacity: .18; filter: blur(2px); pointer-events: none; transition: opacity .45s ease, filter .45s ease; }
+    .revealed { opacity: 1; filter: none; pointer-events: auto; }
+
+    .glyph-display { position: relative; }
+    .bookmark {
+      position: absolute; top: -5px; right: 16px; width: 14px; height: 26px; z-index: 2;
+      background: linear-gradient(180deg, #c9564c, #a53d33);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+      box-shadow: 2px 2px #00000033;
+    }
+
+    .diploma {
+      position: relative; padding: 22px 20px 20px; text-align: center; color: var(--paper-ink);
+      background: linear-gradient(180deg, #f5e4c3, #efdbb3);
+      border: 4px solid #b08d5c; border-radius: 4px;
+      box-shadow: inset 0 0 0 3px #fff8e6, inset 0 0 0 6px #c9a26a, 6px 6px #191423;
+    }
+    .diploma::before, .diploma::after { content: ""; position: absolute; width: 26px; height: 26px; border: 3px solid #b08d5c; }
+    .diploma::before { left: 6px; top: 6px; border-right: 0; border-bottom: 0; }
+    .diploma::after { right: 6px; bottom: 6px; border-left: 0; border-top: 0; }
+    .dip-title { font-family: "Courier New", monospace; font-size: clamp(17px, 2.6vw, 24px); color: #8a2f28; margin: 4px 0 3px; text-shadow: 1px 1px #00000022; }
+    .dip-sub { font-size: 10.5px; font-weight: 800; color: #705c51; letter-spacing: .1em; text-transform: uppercase; }
+    .dip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; margin: 14px 0 10px; }
+    .dip-key {
+      display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px;
+      background: #fff8e6; border: 2px solid #c5a681; border-radius: 3px; box-shadow: 0 2px #c5a681;
+      transition: transform .12s ease;
+    }
+    .dip-key:hover { transform: translateY(-2px); }
+    .dip-key .d-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 30px; line-height: 1.05; color: #3d2c34; }
+    .dip-key .d-py { font-size: 10.5px; font-weight: 800; }
+    .dip-key .d-mean { font-size: 9px; color: #705c51; }
+    .dip-foot { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 6px; flex-wrap: wrap; }
+    .dip-date { font-size: 11px; font-weight: 800; color: #5c4a58; }
+    .dip-seal {
+      width: 58px; height: 58px; border-radius: 50%; background: #c9564c; transform: rotate(-12deg);
+      box-shadow: 2px 2px #00000044, inset 0 0 0 3px #ffffff99;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .dip-seal img { width: 40px; height: 40px; image-rendering: pixelated; filter: drop-shadow(1px 1px #00000055); }
+    .dip-sign { font-family: "KaiTi", "STKaiti", serif; font-size: 22px; color: #8a2f28; }
+
+    .hall-rack { position: relative; padding: 12px 14px 14px; background: #2c222c; border: 3px solid #5c473f; border-radius: 8px; }
+    .hall-rack::before { content: ""; position: absolute; left: 14px; right: 14px; top: 5px; height: 3px; background: repeating-linear-gradient(90deg, #8a6250 0 22px, transparent 22px 30px); opacity: .8; }
+    .hall-rack-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .hall-count { padding: 4px 10px; background: #3a2a35; border: 2px solid #b08d5c; border-radius: 8px; color: var(--gold); font-size: 11px; font-weight: 800; }
+    #hall-strip .key-tile { filter: grayscale(1) brightness(.5); }
+    #hall-strip .key-tile.lit { filter: none; box-shadow: 0 0 14px #ffd54f55, 3px 3px #14101f; }
+    #hall-strip .key-tile.lit:hover { transform: none; }
+    .workshop-sign { transition: box-shadow .5s ease; }
+    .workshop-sign.sign-lit { box-shadow: inset 0 0 0 4px #302333, 0 6px #221a2a, 6px 0 #221a2a, -6px 0 #221a2a, 0 0 36px #ffd54f77; }
+    .workshop-sign.sign-lit h1 { animation: signPulse 1.6s ease infinite; text-shadow: 3px 3px #261d2c, 0 0 16px #ffd54faa; }
+    @keyframes signPulse { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
+    .action-button.pulse { animation: btnPulse 1.2s ease infinite; }
+    @keyframes btnPulse { 0%, 100% { transform: none; } 50% { transform: translateY(-3px); box-shadow: 0 7px #211829, 0 0 16px #f4cc8577; } }
+
+    @media (max-width: 960px) {
+      .workshop-scene { gap: 14px; padding: 18px 20px 12px; }
+      .welcome { margin-left: 20px; margin-right: 20px; padding-left: 10px; padding-right: 10px; gap: 14px; }
+      .host img { width: 122px; height: 122px; }
+      .inside-grid { grid-template-columns: 176px minmax(0, 1fr); gap: 16px; }
+      .gallery-detail { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 760px) {
+      .lesson-shell { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+      .topbar { font-size: 10px; gap: 8px; padding: 7px 10px; }
+      .floor-track { justify-content: flex-start; }
+      .floor-track button { padding: 3px 6px 3px 5px; font-size: 9.5px; gap: 4px; }
+      .floor-track button .f-ico { width: 11px; height: 11px; }
+      .floor-track button .f-num { min-width: 14px; height: 14px; font-size: 9px; }
+      .workshop-scene { grid-template-columns: 72px minmax(0, 1fr); gap: 16px; padding: 20px 16px 10px; }
+      .workshop-window { height: 108px; border-width: 5px; }
+      .pixel-sun { right: 6px; top: 10px; width: 16px; height: 16px; box-shadow: 4px 0 #ffd54f, -4px 0 #ffd54f, 0 4px #ffd54f, 0 -4px #ffd54f, 0 0 20px #ffd54f66; }
+      .tool-wall { display: none; }
+      .welcome { grid-template-columns: 100px minmax(0, 1fr); gap: 12px; margin: 0 16px 22px; padding: 2px 6px 22px; }
+      .host img { width: 100px; height: 100px; }
+      .host-name { padding: 3px 8px; font-size: 11px; }
+      .dialogue { padding: 11px 12px; }
+      .dialogue h2 { font-size: 16px; }
+      .work-lamp { top: 16px; width: 11px; height: 26px; border-width: 2px; }
+      .work-lamp::after { box-shadow: 0 -28px #b88b67; }
+      .work-lamp.left { left: -8px; }
+      .work-lamp.right { right: -8px; }
+      .level-section { padding: 16px 14px 20px; }
+      .glyph { font-size: 84px; }
+      .keys-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+      .inside-grid { grid-template-columns: minmax(0, 1fr); }
+      .ip-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+      .ip-ex { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 12px 10px; }
+      .ip-plate { min-width: 70px; min-height: 70px; }
+      .ip-plate .ch { font-size: 46px; }
+      .ip-plate .q { font-size: 28px; }
+      .ip-parts { font-size: 32px; }
+      .ip-parts span { padding: 4px 8px; border-bottom-width: 5px; }
+      .sel-row { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .lesson-shell { padding-top: max(12px, env(safe-area-inset-top)); padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
+      .topbar { flex-wrap: wrap; justify-content: center; }
+      .floor-track button .f-ico { display: none; }
+      .workshop-room { border-width: 4px; box-shadow: 0 0 0 2px #7a5a4a, 4px 4px #0f0c12; }
+      .workshop-room::before, .workshop-room::after { width: 7px; border-width: 2px; }
+      .roof-beam { height: 15px; }
+      .workshop-scene { position: relative; grid-template-columns: minmax(0, 1fr); padding: 18px 16px 10px; gap: 0; }
+      .window-corner { position: absolute; width: 64px; top: 190px; right: 18px; padding: 0; pointer-events: none; }
+      .workshop-window { height: 76px; }
+      .workshop-sign h1 { font-size: clamp(19px, 5.6vw, 26px); }
+      .welcome { grid-template-columns: minmax(0, 1fr); margin: 0 14px 24px; padding: 0 2px 24px; gap: 14px; }
+      .host { justify-self: center; padding-top: 0; }
+      .host img { width: 128px; height: 128px; }
+      .dialogue { margin: 0 2px 16px; padding: 13px 12px; }
+      .dialogue::before { left: 20px; top: -14px; bottom: auto; border-bottom: 0; border-top: 3px solid #b08d5c; }
+      .dialogue-heading { font-size: 9.5px; }
+      .glyph { font-size: 76px; }
+      .keys-grid { gap: 6px; }
+      .key-hanzi { font-size: 34px; }
+      .key-tile { min-height: 104px; padding-top: 16px; }
+      .ip-ex { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+      .ip-ex-top { justify-content: center; }
+      .ip-ex .sound-button { align-self: center; }
+      .ip-plate { min-width: 78px; min-height: 78px; }
+      .ip-plate .ch { font-size: 56px; }
+      .dip-seal { width: 50px; height: 50px; }
+      .dip-seal img { width: 34px; height: 34px; }
+      .ip-head { justify-content: center; text-align: center; }
+      .writer-actions { gap: 7px; }
+      .action-button { font-size: 10.5px; padding: 8px 4px; }
+    }
+    @media (max-width: 360px) {
+      .glyph-card { grid-template-columns: minmax(0, 1fr); }
+      .glyph-display { border-right: 0; border-bottom: 2px solid #967658; padding: 14px 10px 10px; background: #efdbb3; }
+      .glyph-info { padding: 14px; }
+      .key-num, .key-strokes { display: none; }
+      .key-hanzi { font-size: 28px; }
+      .ip-full { font-size: 42px; }
+      .ip-form { font-size: 38px; }
+      .ip-parts span { padding: 3px 7px; }
+      .ip-shelf { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#hall">Перейти к этажам мастерской</a>
+  <main class="lesson-shell" id="main">
+
+    <header class="topbar">
+      <span class="route-label">Уровень 1 · Ключи · Мастерская Синнабона</span>
+      <nav class="floor-track" aria-label="Этажи урока">
+        <button type="button" class="current" data-floor="hall" style="--c:#80e5dc"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v15"/><path d="M3 21h18"/><path d="M12.5 12h.01"/></svg></span><span class="f-num">1</span><span class="f-label">Холл</span></button>
+        <button type="button" data-floor="inside" style="--c:#f4cc85"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="f-num">2</span><span class="f-label">Ключ в деле</span></button>
+        <button type="button" data-floor="practice" style="--c:#a8d5a0"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span class="f-num">3</span><span class="f-label">Письмо</span></button>
+        <button type="button" data-floor="final" style="--c:#f2a3a3"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></span><span class="f-num">4</span><span class="f-label">Финал</span></button>
+      </nav>
+    </header>
+
+    <div class="workshop-room">
+      <div class="roof-beam" aria-hidden="true"></div>
+      <div class="workshop-scene">
+        <div class="window-corner" aria-hidden="true"><div class="workshop-window"><span class="pixel-cloud"></span><span class="pixel-cloud small"></span><span class="pixel-sun"></span><span class="window-planter"></span><span class="workshop-hills"></span></div><div class="window-sill"></div></div>
+        <div class="workshop-sign">
+          <span class="sign-label">Урок 1 · десять ключей</span>
+          <h1>Мастерская<br>ключей</h1>
+          <div class="sign-brush" aria-hidden="true"><div class="brush-handle"></div><div class="brush-tip"></div></div>
+        </div>
+        <div class="tool-wall" aria-hidden="true">
+          <div class="tool-bar"></div>
+          <div class="tool-row">
+            <span class="tool tool-saw"></span>
+            <span class="tool tool-hammer"><span class="h-head"></span><span class="h-handle"></span></span>
+            <span class="tool tool-brush"><span class="b-handle"></span><span class="b-tip"></span></span>
+          </div>
+          <div class="inkpot-shelf"><i class="inkpot"></i><i class="inkpot violet"></i><i class="inkpot amber"></i></div>
+        </div>
+      </div>
+      <section class="welcome" aria-labelledby="welcome-title">
+        <div class="work-lamp left" aria-hidden="true"></div>
+        <div class="host"><img src="assets/cinnabon.svg" alt="Кот Синнабон в доспехах" width="138" height="138"><span class="host-name">Синнабон</span></div>
+        <div class="dialogue">
+          <div class="dialogue-heading"><span>Синнабон · мастер-каллиграф</span><span>Урок 1 · ключи</span></div>
+          <h2 id="welcome-title">Заходи! Сегодня учим десять главных ключей</h2>
+          <div id="cinnabon-bubble"><p>Мяу! <b>Ключи</b> — это смысловые детальки, из которых собираются иероглифы. Увидел <span class="hanzi-inline">氵</span> «воду» — знак про жидкость, увидел <span class="hanzi-inline">讠</span> «речь» — про разговор. Сегодня освоим <b>десять ключей</b>: 水 艹 木 口 手 心 金 人 虫 言. Поднимайся по этажам мастерской — послушай ключи, увидь их внутри иероглифов и напиши кистью сам!</p></div>
+        </div>
+        <div class="work-lamp right" aria-hidden="true"></div>
+        <div class="workbench" aria-hidden="true"></div>
+      </section>
+      <div class="floor" aria-hidden="true"></div>
+    </div>
+
+    <section class="level-section" id="hall" aria-labelledby="hall-title">
+      <div class="section-head"><span class="level-badge">Этаж 1</span><h2 id="hall-title">Холл: что такое ключи</h2></div>
+      <p class="level-lead"><b>Ключ</b> (部首 <i>bùshǒu</i>) — часть иероглифа, которая подсказывает его смысл. Например, у знаков «река», «море» и «сок» общий ключ <b>«вода»</b> — все они про жидкость. Ключей всего 214, но даже десятка самых ходовых заметно облегчает жизнь: незнакомый иероглиф перестаёт быть набором закорючек.</p>
+      <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p>Задание: в холле ещё темно, и ключи на полке потемнели. Нажимай на плитки — каждая <b>вспыхнет, прозвучит и откроет свою страницу в книге</b>. Зажги все десять — и вывеска мастерской засияет золотом!</p></div>
+      <div class="hall-rack" id="hall-rack">
+        <div class="hall-rack-head"><span class="object-label">Полка ключей</span><span class="hall-count" id="hall-count" role="status">Зажжено 0 из 10</span></div>
+        <div class="keys-grid" id="hall-strip" role="list" aria-label="Десять ключей урока"></div>
+      </div>
+      <p class="keys-note">Важно: внутри составных иероглифов ключ часто меняет облик — 水 превращается в 氵, 人 — в 亻. Этаж 2 покажет это в деле.</p>
+      <div class="gallery-detail">
+        <section class="glyph-card" id="gd-card" aria-labelledby="gd-mean">
+          <div class="book-page glyph-display">
+            <span class="bookmark" aria-hidden="true"></span>
+            <span class="page-label">Ключ урока</span>
+            <div class="glyph" id="gd-glyph" lang="zh-CN">水</div>
+            <div class="reading tone-text tone-3" id="gd-py">shuǐ</div>
+            <span class="tone-label" id="gd-tone">3-й тон · голубой</span>
+            <span class="page-number" aria-hidden="true">— 01 —</span>
+          </div>
+          <div class="book-page glyph-info">
+            <span class="page-label">Значение</span>
+            <h3 id="gd-mean">вода</h3>
+            <dl>
+              <div class="detail"><dt>Черт</dt><dd id="gd-strokes">4</dd></div>
+              <div class="detail"><dt>Номер в словаре</dt><dd id="gd-kx">№85 из 214</dd></div>
+              <div class="detail"><dt>В иероглифе</dt><dd id="gd-form">氵 слева</dd></div>
+            </dl>
+            <button class="sound-button" type="button" id="gd-sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" stroke-linecap="round"/></svg><span id="gd-sound-label">Послушать shuǐ</span></button>
+            <span class="page-number" id="gd-num">— ключ 1 из 10 —</span>
+          </div>
+        </section>
+        <div class="gd-pictures" id="gd-pictures"></div>
+      </div>
+      <div class="finale-actions" style="margin-top: 16px;"><button class="action-button primary" type="button" data-goto="inside">Этаж 2 · Ключ в деле →</button></div>
+    </section>
+
+    <section class="level-section" id="inside" aria-labelledby="inside-title" hidden>
+      <div class="section-head"><span class="level-badge n2">Этаж 2</span><h2 id="inside-title">Ключ в деле: как он прячется в иероглифах</h2></div>
+      <p class="level-lead">Выбери ключ на полке слева, затем <b>выбери одно из трёх слов</b>. Под знаком вопроса <b>собери иероглиф слова из кубиков</b> — нажимай их <b>в любом порядке</b>: бирюзовый кубик это сам ключ, сиреневые — вторые части. Соберёшь — слово вспыхнет на мольберте, а кубики расскажут свои роли.</p>
+      <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p>Правило мастерской: ключ отвечает за <b>смысл</b>, а вторая часть часто подсказывает <b>звучание</b>. Собери по иероглифу для каждого из трёх слов — и правило станет очевидным!</p></div>
+      <div class="inside-grid">
+        <div class="ip-shelf" id="inside-shelf" role="list" aria-label="Полка выбора ключа"></div>
+        <section class="inside-panel" id="inside-panel" aria-label="Досье выбранного ключа"></section>
+      </div>
+      <div class="finale-actions" style="margin-top: 16px;"><button class="action-button primary" type="button" data-goto="practice">Этаж 3 · Письмо кистью →</button></div>
+    </section>
+
+    <section class="level-section" id="practice" aria-labelledby="practice-title" hidden>
+      <div class="section-head"><span class="level-badge n3">Этаж 3</span><h2 id="practice-title">Стол ученика: напиши ключ сам</h2></div>
+      <p class="level-lead">Выбери ключ на полке сверху и <b>обведи его пальцем или мышкой</b> прямо в тетрадной клетке. Очередь черт подскажут точки, а если застрял — жми «Показать черты».</p>
+      <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p>Не спеши: одна черта — одно движение кисти, без отрыва. За каждый написанный ключ — искры и мурчание!</p></div>
+      <section class="writer-panel" aria-labelledby="writer-title">
+        <div class="sel-row" id="writer-select" role="list" aria-label="Выбор ключа для письма"></div>
+        <div class="writer-heading"><div><div class="object-label">Тренажёр письма</div><h3 id="writer-title">Напиши <span class="hanzi-inline" id="w-char" lang="zh-CN">水</span></h3></div><span class="practice-badge" id="w-badge">4 черты</span></div>
+        <p class="desk-instruction" id="w-hint">Три капли — и хвост: сначала точка слева, потом две капли и длинная черта.</p>
+        <div class="paper-wrap"><div class="writing-paper"><div class="writer-target" id="writer-target" aria-label="Поле для написания ключа"></div></div><div class="inkpot-deco" aria-hidden="true"></div></div>
+        <p class="status-text" id="w-status" role="status">Обведи ключ пальцем или мышкой</p>
+        <div class="stroke-progress"><div class="stroke-dots" id="w-dots" aria-hidden="true"></div><p class="progress-text" id="w-progress" aria-live="polite">Черта 0 из 4</p></div>
+        <div class="writer-actions"><button class="action-button" type="button" id="w-animate">Показать черты</button><button class="action-button primary" type="button" id="w-retry">Попробовать заново</button></div>
+        <div class="success-msg" id="w-success" role="status" hidden>Ключ написан верно! Синнабон одобрительно мурчит.</div>
+      </section>
+      <div class="finale-actions" style="margin-top: 16px;"><button class="action-button primary" type="button" data-goto="final">Финал · Получить грамоту →</button></div>
+    </section>
+
+    <section class="level-section" id="final" aria-labelledby="final-title" hidden>
+      <div class="section-head"><span class="level-badge gold">Финал</span><h2 id="final-title">Десять ключей — в кармане!</h2></div>
+      <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p id="final-bubble">Ты прошёл(ла) все этажи мастерской! Теперь, встретив незнакомый иероглиф, сначала ищи в нём знакомый ключ — он шепнёт, о чём этот знак. Держи блюдце молока!</p></div>
+      <div class="diploma" id="diploma" aria-label="Грамота подмастерья мастерской ключей"></div>
+      <div class="finale-actions"><button class="action-button primary" type="button" id="restart-btn">Пройти урок заново</button></div>
+    </section>
+
+    <footer class="lesson-footer">
+      <span class="footer-location">Мастерская ключей · Синнабон</span>
+      <span>Уровень 1 · Урок 1 · ключи 水 艹 木 口 手 心 金 人 虫 言</span>
+    </footer>
+    <p id="voice-tip" role="status">Не удалось озвучить слог. Проверь, что файлы аудио на месте, и попробуй снова.</p>
+    <noscript><p style="color:#ffe5bd; background:#593d39; border:2px solid #c99a72; padding:12px; border-radius:6px;">Включи JavaScript — без него не работают этажи, галерея ключей и тренажёр письма.</p></noscript>
+  </main>
+</body>
+</html>
