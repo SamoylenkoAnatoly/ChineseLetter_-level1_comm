@@ -316,6 +316,72 @@
 
     var inited = {};
 
+    var hallBubbleHTML = "";
+    (function () { var b = document.getElementById("cinnabon-bubble"); if (b) hallBubbleHTML = b.innerHTML; })();
+
+    var FLOOR_HEADERS = {
+      hall: {
+        theme: "room-hall", label: "Урок 1 · десять ключей", sign: "Мастерская<br>ключей",
+        img: "assets/cinnabon.svg", alt: "Кот Синнабон в доспехах", name: "Синнабон",
+        who: "Синнабон · мастер-каллиграф", what: "Урок 1 · ключи",
+        title: "Заходи! Сегодня учим десять главных ключей", bubble: hallBubbleHTML
+      },
+      inside: {
+        theme: "room-inside", label: "Этаж 2 · ключ в деле", sign: "Ключ<br>в деле",
+        img: "assets/characters/zhabert.svg", alt: "Жаберт — жаб-художник с кистью", name: "Жаберт",
+        who: "Жаберт · художник мастерской", what: "Этаж 2 · иероглифы",
+        title: "Квак! Смотри, из каких частей собраны слова",
+        bubble: "Квак! Я — <b>Жаберт</b>, здешний художник. Мой любимый сюжет — <b>слова в разрезе</b>: 河 «река» — это ключ <b>水 «вода»</b> плюс звуковая подсказка. Ключи прячутся внутри иероглифов и часто <b>меняют облик</b>. Выбирай ключ на полке — и соберём слово из кубиков!"
+      },
+      practice: {
+        theme: "room-practice", label: "Этаж 3 · письмо кистью", sign: "Письмо<br>кистью",
+        img: "assets/characters/robot.svg", alt: "Робот с жёлтой антенной и красным сердцем", name: "Робо",
+        who: "Робо · тренажёр письма", what: "Этаж 3 · письмо",
+        title: "Бип-буп! Пора писать кистью самому",
+        bubble: "Бип-буп! Я — <b>Робо</b>, тренажёр этого этажа. Программа проста: <b>одна черта — одно движение кисти</b>, без отрыва. Выбери ключ на полке сверху и обведи его по точкам в тетрадной клетке — я насчитаю черты и зажгу искры!"
+      },
+      tower: {
+        theme: "room-tower", label: "Этаж 4 · башня превращений", sign: "Башня<br>КоКо",
+        img: "assets/characters/wizard.svg", alt: "Хитрый маг КоКо в остроконечной шляпе со звездой", name: "КоКо",
+        who: "КоКо · хитрый маг превращений", what: "Этаж 4 · башня КоКо",
+        title: "Хе-хе! Узнай ключ в любом обличье",
+        bubble: "Хе-хе! Ты поднялся в мою <b>башню превращений</b>. Раскрою секрет: ключ — это <b>заклинание смысла</b>, а внутри иероглифа он <b>переодевается</b>: 水 превращается в 氵. Жми на руны — покажу все десять фокусов и открою путь к грамоте!"
+      },
+      final: {
+        theme: "room-final", label: "Этаж 5 · грамота подмастерья", sign: "Грамота<br>подмастерья",
+        img: "assets/cinnabon.svg", alt: "Кот Синнабон в доспехах", name: "Синнабон",
+        who: "Синнабон · мастер-каллиграф", what: "Этаж 5 · финал",
+        title: "Десять ключей — в кармане!",
+        bubble: "Ты дошёл(ла) до самого верха — <b>все десять ключей твои</b>! Загляни в грамоту подмастерья ниже — она с моей личной печатью. Теперь незнакомый иероглиф сам шепнёт, о чём он. Мур-р, держи блюдце молока!"
+      }
+    };
+
+    function applyHeader(id) {
+      var cfg = FLOOR_HEADERS[id];
+      if (!cfg) return;
+      var room = document.querySelector(".workshop-room");
+      if (room) {
+        room.classList.remove("room-inside", "room-practice", "room-tower", "room-final");
+        if (cfg.theme !== "room-hall") room.classList.add(cfg.theme);
+      }
+      var label = document.querySelector(".workshop-sign .sign-label");
+      if (label) label.textContent = cfg.label;
+      var sign = document.querySelector(".workshop-sign h1");
+      if (sign) sign.innerHTML = cfg.sign;
+      var hostImg = document.querySelector(".host img");
+      if (hostImg) { hostImg.src = cfg.img; hostImg.alt = cfg.alt; }
+      var hostName = document.querySelector(".host-name");
+      if (hostName) hostName.textContent = cfg.name;
+      var who = document.querySelector(".dialogue-heading span:first-child");
+      if (who) who.textContent = cfg.who;
+      var what = document.querySelector(".dialogue-heading span:last-child");
+      if (what) what.textContent = cfg.what;
+      var title = document.getElementById("welcome-title");
+      if (title) title.textContent = cfg.title;
+      var bubble = document.getElementById("cinnabon-bubble");
+      if (bubble) bubble.innerHTML = cfg.bubble;
+    }
+
     var showFloor = (function () {
       var visited = {};
       var buttons = Array.prototype.slice.call(document.querySelectorAll(".floor-track button"));
@@ -337,6 +403,7 @@
         });
         visited[FLOORS.indexOf(id)] = true;
         setCurrent(id);
+        applyHeader(id);
         var section = document.getElementById(id);
         if (section && !noScroll) section.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
         if (id === "inside" && !inited.inside) { inited.inside = true; initInside(); }
