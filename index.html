@@ -440,9 +440,10 @@
     .sound-altar .sound-button.speaking { outline-color: #fb8c00; }
     .tone-plot { text-align: center; padding: 14px 12px 12px; margin-top: 18px; background: #241243; border: 2px solid #6c3fb5; border-radius: 3px; }
     .tone-plot-label { text-transform: uppercase; letter-spacing: .12em; color: #cbb2f2; font-size: 9px; font-weight: 800; margin-bottom: 8px; }
-    .tone-plot svg { width: 100%; max-width: 250px; height: auto; display: block; margin: 0 auto; }
+    .tone-plot svg { width: 100%; max-width: 250px; height: auto; display: block; margin: 0 auto; cursor: crosshair; touch-action: none; }
     #tone-dot { filter: drop-shadow(0 0 4px #fb8c00); }
     .tone-plot-cap { font-size: 12px; line-height: 1.5; color: #c9b4f2; margin: 6px 0 0; }
+    .tone-draw-hint { font-size: 11px; line-height: 1.5; color: #f4cc85; margin: 4px 0 0; }
     .tone-scroll { position: relative; margin: 6px 42px 26px; padding: 22px 24px; border: 4px solid #cbb2f2; border-radius: 3px; color: #2c1d4e; background: #efe6ff; box-shadow: inset 0 0 0 3px #ded0f4, 5px 5px #170a2e; }
     .tone-scroll::before, .tone-scroll::after { content: ""; position: absolute; left: -10px; right: -10px; height: 10px; background: #9b6fd8; border: 3px solid #57377b; }
     .tone-scroll::before { top: -10px; }
@@ -1076,7 +1077,7 @@
           <section class="tower-shelf" aria-label="Полка мелодий">
             <span class="object-label">Полка мелодий</span>
             <div class="tower-runes" id="tower-runes" role="list" aria-label="Десять рун звуковой башни"></div>
-            <span class="tower-count" id="tower-count" role="status">Мелодий освоено 0 из 10</span>
+            <span class="tower-count" id="tower-count" role="status">Мелодий сыграно 0 из 10</span>
           </section>
           <section class="sound-altar" aria-label="Кристалл звучания">
             <div class="object-heading"><h3>Кристалл звучания</h3><span>Слушай и повторяй</span></div>
@@ -1094,7 +1095,8 @@
             </div>
             <div class="tone-plot">
               <div class="tone-plot-label">Магический резонатор</div>
-              <svg viewBox="0 0 220 70" role="img" aria-label="Кривая мелодии тона"><line x1="14" y1="62" x2="206" y2="62" stroke="#5c3a80" stroke-width="2" stroke-dasharray="3 4"/><path id="tone-path" d="M14 58 C 60 46, 120 26, 204 12" fill="none" stroke="#c9b4f2" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/><circle id="tone-dot" r="6" fill="#fb8c00" cx="14" cy="58" opacity="0"/><text x="14" y="10" fill="#c9b4f2" font-size="10" text-anchor="middle">старт</text></svg>
+              <svg id="tone-svg" viewBox="0 0 220 70" touch-action="none" role="img" aria-label="Резонатор: кривая мелодии тона — проведи пальцем, чтобы нарисовать мелодию"><line x1="14" y1="62" x2="206" y2="62" stroke="#5c3a80" stroke-width="2" stroke-dasharray="3 4"/><path id="tone-path" d="M14 58 C 60 46, 120 26, 204 12" fill="none" stroke="#c9b4f2" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/><path id="user-path" d="" fill="none" stroke="#f4cc85" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/><circle id="tone-dot" r="6" fill="#fb8c00" cx="14" cy="58" opacity="0"/><text x="14" y="10" fill="#c9b4f2" font-size="10" text-anchor="middle">старт</text></svg>
+              <p class="tone-draw-hint">Проведи пальцем через весь резонатор — нарисуй мелодию тона, и кристалл запоёт под твоей рукой.</p>
               <p class="tone-plot-cap" id="tone-plot-cap">Выбери руну — резонатор нарисует её мелодию.</p>
             </div>
           </section>

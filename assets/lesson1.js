@@ -214,6 +214,21 @@
     "Звёзды сегодня подпевают. А ты?",
     "Попробуй «Медленно» — магия любит неторопливых."
   ];
+  var KOCO_DRAW = {
+    good: [
+      "Мелодия поймана! Ты слышишь тоны, как настоящий маг!",
+      "Идеальная линия! Кристалл мурлычет от удовольствия!",
+      "Вот это форма! Резонатор аплодирует искрами!"
+    ],
+    mid: [
+      "Почти-почти! Ещё разок — и кристалл вскрикнет от восторга.",
+      "Слышу знакомую песню, но она пока стесняется. Попробуй снова!"
+    ],
+    off: [
+      "Хе-хе, это песня другого тона. Послушай ещё раз и повтори рукой!",
+      "Не та мелодия… Кристалл шепнул: «проверь меня ещё разок»."
+    ]
+  };
   var NOTE_DEFAULT = "Собрано! Нажми на кубик — расскажу его роль";
   var FLOORS = ["hall", "inside", "practice", "tower", "final"];
 
@@ -973,11 +988,21 @@
       var plotCap = document.getElementById("tone-plot-cap");
       var path = document.getElementById("tone-path");
       var dot = document.getElementById("tone-dot");
-      if (!shelf || !sGlyph || !path) return;
-      var heard = {};
-      var heardCount = 0;
+      var svgEl = document.getElementById("tone-svg");
+      var userPath = document.getElementById("user-path");
+      if (!shelf || !sGlyph || !path || !svgEl || !userPath) return;
+      var plotBox = svgEl.parentNode;
+      var sung = {};
+      var sungCount = 0;
       var current = null;
-      var START_LINE = "Выбери руну на полке — и кристалл споёт её мелодию. Хе-хе!";
+      var tiles = {};
+      var drawing = false;
+      var drawnPts = [];
+      var guideCtx = null;
+      var guideOsc = null;
+      var guideGain = null;
+      var START_LINE = "Выбери руну — послушай её мелодию и нарисуй её рукой на резонаторе. Хе-хе!";
+      var INVITE_LINE = "Послушай мелодию — и проведи линию на резонаторе. Хе-хе!";
       var TONE_PATHS = {
         1: "M14 18 C 70 16, 150 18, 204 20",
         2: "M14 58 C 60 46, 120 26, 204 12",
@@ -1040,6 +1065,197 @@
         rafId = requestAnimationFrame(frame);
       }
 
+      function guideFreq(y) {
+        var cy = Math.max(4, Math.min(66, y));
+        return 180 + (66 - cy) / 62 * 240;
+      }
+      function startGuide(y) {
+        stopGuide();
+        try {
+          var Ctx = window.AudioContext || window.webkitAudioContext;
+          if (!Ctx) return;
+          guideCtx = new Ctx();
+          guideOsc = guideCtx.createOscillator();
+          guideGain = guideCtx.createGain();
+          guideOsc.type = "sine";
+          guideOsc.frequency.value = guideFreq(y);
+          guideGain.gain.value = 0.0001;
+          guideOsc.connect(guideGain);
+          guideGain.connect(guideCtx.destination);
+          guideOsc.start();
+          guideGain.gain.setTargetAtTime(0.045, guideCtx.currentTime, 0.02);
+        } catch (error) {
+          guideCtx = null; guideOsc = null; guideGain = null;
+        }
+      }
+      function moveGuide(y) {
+        if (!guideOsc || !guideCtx) return;
+        try { guideOsc.frequency.setTargetAtTime(guideFreq(y), guideCtx.currentTime, 0.02); } catch (error) {}
+      }
+      function stopGuide() {
+        if (!guideCtx) return;
+        var ctx = guideCtx, osc = guideOsc, gain = guideGain;
+        guideCtx = null; guideOsc = null; guideGain = null;
+        try {
+          gain.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.03);
+          setTimeout(function () {
+            try { osc.stop(); ctx.close().catch(function () {}); } catch (error) {}
+          }, 180);
+        } catch (error) {
+          try { ctx.close(); } catch (e2) {}
+        }
+      }
+
+      function svgPoint(event) {
+        var rect = svgEl.getBoundingClientRect();
+        return {
+          x: (event.clientX - rect.left) / rect.width * 220,
+          y: (event.clientY - rect.top) / rect.height * 70
+        };
+      }
+      function clearUserPath() {
+        drawnPts = [];
+        userPath.setAttribute("d", "");
+        userPath.setAttribute("opacity", "0");
+      }
+      function softStopDraw() {
+        if (drawing) drawing = false;
+        stopGuide();
+      }
+
+      function pathLengthOf(pts) {
+        var len = 0;
+        for (var i = 1; i < pts.length; i++) {
+          len += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+        }
+        return len;
+      }
+      function refSamples() {
+        var total = path.getTotalLength();
+        var pts = [];
+        for (var i = 0; i <= 60; i++) pts.push(path.getPointAtLength(total * i / 60));
+        return pts;
+      }
+      function seriesY(pts, n) {
+        var minX = Infinity, maxX = -Infinity;
+        pts.forEach(function (pt) {
+          if (pt.x < minX) minX = pt.x;
+          if (pt.x > maxX) maxX = pt.x;
+        });
+        var span = maxX - minX;
+        if (span < 1) {
+          var mid = pts[Math.floor(pts.length / 2)].y;
+          var flat = [];
+          for (var k = 0; k < n; k++) flat.push(mid);
+          return flat;
+        }
+        var out = [];
+        for (var s = 0; s < n; s++) {
+          var xt = minX + span * s / (n - 1);
+          var y = null;
+          for (var i = 0; i < pts.length - 1; i++) {
+            var a = pts[i], b = pts[i + 1];
+            var lo = Math.min(a.x, b.x), hi = Math.max(a.x, b.x);
+            if (xt >= lo && xt <= hi && hi - lo > 0.0001) {
+              y = a.y + (b.y - a.y) * ((xt - a.x) / (b.x - a.x));
+              break;
+            }
+          }
+          if (y === null) y = pts[Math.floor(pts.length / 2)].y;
+          out.push(y);
+        }
+        return out;
+      }
+      function znorm(v) {
+        var mean = v.reduce(function (s, x) { return s + x; }, 0) / v.length;
+        var std = Math.sqrt(v.reduce(function (s, x) { return s + (x - mean) * (x - mean); }, 0) / v.length);
+        if (std < 1.5) return null;
+        return v.map(function (x) { return (x - mean) / std; });
+      }
+      function pearson(a, b) {
+        var n = a.length, sa = 0, sb = 0, saa = 0, sbb = 0, sab = 0;
+        for (var i = 0; i < n; i++) {
+          sa += a[i]; sb += b[i]; saa += a[i] * a[i]; sbb += b[i] * b[i]; sab += a[i] * b[i];
+        }
+        var ma = sa / n, mb = sb / n;
+        var cov = sab / n - ma * mb;
+        var va = saa / n - ma * ma;
+        var vb = sbb / n - mb * mb;
+        if (va <= 0 || vb <= 0) return 0;
+        return cov / Math.sqrt(va * vb);
+      }
+      function evaluateDraw() {
+        if (drawnPts.length < 3 || pathLengthOf(drawnPts) < 24) {
+          say("Совсем коротенько! Проведи линию через весь резонатор.");
+          return;
+        }
+        var ref = seriesY(refSamples(), 8);
+        var usr = seriesY(drawnPts, 8);
+        var refZ = znorm(ref), usrZ = znorm(usr);
+        var corr;
+        if (!refZ || !usrZ) {
+          var refD = Math.abs(ref[ref.length - 1] - ref[0]);
+          var usrD = Math.abs(usr[usr.length - 1] - usr[0]);
+          if (refD < 4) corr = usrD < 8 ? 0.85 : (usrD < 20 ? 0.55 : 0.2);
+          else corr = usrD < 10 ? 0.2 : (usrD >= refD * 0.5 ? 0.7 : 0.5);
+        } else {
+          corr = pearson(refZ, usrZ);
+        }
+        var bucket;
+        if (corr >= 0.72) { bucket = "good"; sparkle(plotBox, 30); }
+        else if (corr >= 0.45) { bucket = "mid"; sparkle(plotBox, 14); }
+        else bucket = "off";
+        var bucketLines = KOCO_DRAW[bucket];
+        say(bucketLines[Math.floor(Math.random() * bucketLines.length)]);
+        if (current && !sung[current.ch]) {
+          sung[current.ch] = true;
+          sungCount++;
+          var tile = tiles[current.ch];
+          if (tile) tile.classList.add("done");
+          count.textContent = "Мелодий сыграно " + sungCount + " из " + KEYS.length;
+          sparkle(plotBox, 20);
+          if (sungCount === KEYS.length) {
+            [0, 380, 760].forEach(function (delay) {
+              setTimeout(function () { sparkle(plotBox, 50); }, delay);
+            });
+            say("Хе-хе-хе! Все десять мелодий сыграны — концерт удался! Ступай на финальный этаж за грамотой.");
+            gate.disabled = false;
+            gate.classList.remove("gate-locked");
+            gate.classList.add("pulse");
+          }
+        }
+      }
+
+      svgEl.addEventListener("pointerdown", function (event) {
+        if (event.button !== undefined && event.button !== 0) return;
+        event.preventDefault();
+        stopTone();
+        drawing = true;
+        var p = svgPoint(event);
+        drawnPts = [p];
+        userPath.setAttribute("d", "M" + p.x.toFixed(1) + " " + p.y.toFixed(1));
+        userPath.setAttribute("opacity", "1");
+        startGuide(p.y);
+        try { svgEl.setPointerCapture(event.pointerId); } catch (error) {}
+      });
+      svgEl.addEventListener("pointermove", function (event) {
+        if (!drawing) return;
+        var p = svgPoint(event);
+        var last = drawnPts[drawnPts.length - 1];
+        var dx = p.x - last.x, dy = p.y - last.y;
+        if (dx * dx + dy * dy < 2.25) return;
+        drawnPts.push(p);
+        userPath.setAttribute("d", userPath.getAttribute("d") + " L" + p.x.toFixed(1) + " " + p.y.toFixed(1));
+        moveGuide(p.y);
+      });
+      svgEl.addEventListener("pointerup", function () {
+        if (!drawing) return;
+        drawing = false;
+        stopGuide();
+        evaluateDraw();
+      });
+      svgEl.addEventListener("pointercancel", function () { softStopDraw(); });
+
       function renderAltar(key) {
         current = key;
         sGlyph.textContent = key.ch;
@@ -1066,28 +1282,16 @@
       }
 
       function pickRune(key, tile) {
+        softStopDraw();
+        clearUserPath();
         renderAltar(key);
         play(tile, key.audio, key.ch);
         animateTone(1);
-        if (heard[key.ch]) {
+        if (sung[key.ch]) {
           sparkle(tile, 14);
-          return;
-        }
-        heard[key.ch] = true;
-        heardCount++;
-        tile.classList.add("done");
-        count.textContent = "Мелодий освоено " + heardCount + " из " + KEYS.length;
-        sparkle(tile, 34);
-        if (heardCount === KEYS.length) {
-          [0, 380, 760].forEach(function (delay) {
-            setTimeout(function () { sparkle(shelf, 50); }, delay);
-          });
-          say("Хе-хе-хе! Все десять мелодий твои — целый концерт! Ступай на финальный этаж за грамотой.");
-          gate.disabled = false;
-          gate.classList.remove("gate-locked");
-          gate.classList.add("pulse");
-        } else {
           say(KOCO_LINES[Math.floor(Math.random() * KOCO_LINES.length)]);
+        } else {
+          say(INVITE_LINE);
         }
       }
 
@@ -1101,6 +1305,7 @@
         tile.appendChild(hanzi);
         tile.appendChild(el("span", "r-py", key.py));
         tile.addEventListener("click", function () { pickRune(key, tile); });
+        tiles[key.ch] = tile;
         shelf.appendChild(tile);
       });
 
@@ -1114,17 +1319,24 @@
         play(slowBtn, current.audio, current.ch, 0.55);
         animateTone(0.55);
       });
-      document.addEventListener("visibilitychange", function () { if (document.hidden) stopTone(); });
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          stopTone();
+          softStopDraw();
+        }
+      });
 
       say(START_LINE);
 
       resetTower = function () {
-        heard = {};
-        heardCount = 0;
+        sung = {};
+        sungCount = 0;
+        softStopDraw();
+        clearUserPath();
         Array.prototype.forEach.call(shelf.querySelectorAll(".tower-rune"), function (tile) {
           tile.classList.remove("done");
         });
-        count.textContent = "Мелодий освоено 0 из " + KEYS.length;
+        count.textContent = "Мелодий сыграно 0 из " + KEYS.length;
         clearAltar();
         gate.disabled = true;
         gate.classList.add("gate-locked");
