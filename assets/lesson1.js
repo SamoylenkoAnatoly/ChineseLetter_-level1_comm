@@ -206,8 +206,16 @@
     "Прекрасно! Ключ тебе покорился!",
     "Мастер бы гордился! Мяу!"
   ];
+  var KOCO_LINES = [
+    "Хе-хе! Смотри, как просто, когда знаешь секрет…",
+    "Не смотри на посох — смотри на ключ!",
+    "Магия? Пфф. Просто ключ умеет переодеваться.",
+    "Не моргай — сейчас ключ сменит облик!",
+    "Звёзды шепчут: этот ключ — твой любимый.",
+    "Хитро придумано людьми, ничего не скажешь…"
+  ];
   var NOTE_DEFAULT = "Собрано! Нажми на кубик — расскажу его роль";
-  var FLOORS = ["hall", "inside", "practice", "final"];
+  var FLOORS = ["hall", "inside", "practice", "tower", "final"];
 
   document.addEventListener("DOMContentLoaded", function () {
     var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -334,6 +342,7 @@
         if (id === "inside" && !inited.inside) { inited.inside = true; initInside(); }
         if (id === "practice" && !inited.practice) { inited.practice = true; initPractice(); }
         else if (id === "practice") checkWriterSize();
+        if (id === "tower" && !inited.tower) { inited.tower = true; initTower(); }
         if (id === "final" && !inited.final) { inited.final = true; initFinal(); }
         if (id === "final") saluteFinal();
       };
@@ -347,6 +356,7 @@
     });
 
     var resetHall = function () {};
+    var resetTower = function () {};
 
     (function initHall() {
       var strip = document.getElementById("hall-strip");
@@ -785,6 +795,137 @@
 
     var salutedFinal = false;
 
+    function initTower() {
+      var shelf = document.getElementById("tower-runes");
+      var scroll = document.getElementById("tower-scroll");
+      if (!shelf || !scroll) return;
+      var count = document.getElementById("tower-count");
+      var line = document.getElementById("tower-line");
+      var gate = document.getElementById("tower-gate");
+      var cast = {};
+      var castCount = 0;
+      var START_LINE = "Выбери руну — и я приоткрою её тайну. Хе-хе!";
+
+      function say(text) { if (line) line.textContent = text; }
+
+      function buildScroll(key) {
+        var box = el("div", null);
+
+        var head = el("div", "ts-head");
+        var glyph = el("span", "ts-glyph", key.ch);
+        glyph.setAttribute("lang", "zh-CN");
+        var meta = el("div", "ts-meta");
+        meta.appendChild(el("span", "ts-py tone-text " + toneClass(key.t), key.py));
+        meta.appendChild(el("span", "ts-mean", key.mean));
+        head.appendChild(glyph);
+        head.appendChild(meta);
+        head.appendChild(soundButton(key.audio, key.ch, "Послушать " + key.py));
+        box.appendChild(head);
+
+        var morph = el("div", "ts-morph");
+        var full = el("i", null, key.ch);
+        full.setAttribute("lang", "zh-CN");
+        morph.appendChild(full);
+        if (key.form !== key.ch) {
+          morph.appendChild(el("span", "ts-arrow", "→"));
+          var form = el("i", null, key.form);
+          form.setAttribute("lang", "zh-CN");
+          morph.appendChild(form);
+        }
+        box.appendChild(morph);
+
+        var note = el("p", "ts-form-note");
+        if (key.form !== key.ch) {
+          note.innerHTML = "<b>Фокус превращения:</b> ключ «" + key.mean + "» надевает облик <b>" + key.form + "</b> («" + key.formName + "») и встаёт " + key.pos + ".";
+        } else {
+          note.innerHTML = "<b>Фокус превращения:</b> этот ключ не переодевается — «" + key.mean + "» остаётся собой («" + key.formName + "», " + key.pos + ").";
+        }
+        box.appendChild(note);
+
+        var dl = el("dl", "ts-details");
+        var rows = [["Черт", strokesLabel(key.strokes)], ["В словаре", "№" + key.kx + " из 214"], ["Слов на этаже 2", String(key.ex.length)]];
+        rows.forEach(function (row) {
+          var d = el("div", "detail");
+          d.appendChild(el("dt", null, row[0]));
+          d.appendChild(el("dd", null, row[1]));
+          dl.appendChild(d);
+        });
+        box.appendChild(dl);
+
+        var ex = key.ex[0];
+        var word = el("div", "ts-word");
+        var wch = el("span", "w-ch", ex.ch);
+        wch.setAttribute("lang", "zh-CN");
+        var wmeta = el("div", "w-meta");
+        wmeta.appendChild(el("span", "w-py tone-text " + toneClass(ex.t), ex.py));
+        wmeta.appendChild(el("span", "w-tr", ex.tr));
+        word.appendChild(wch);
+        word.appendChild(wmeta);
+        word.appendChild(soundButton(ex.audio, ex.ch, "Слово"));
+        box.appendChild(word);
+
+        var pic = el("div", "ts-pic");
+        probeInto(pic, ex.ch, ex.py, ex.tr);
+        box.appendChild(pic);
+
+        return box;
+      }
+
+      function castRune(key, tile) {
+        scroll.replaceChildren(buildScroll(key));
+        play(tile, key.audio, key.ch);
+        if (cast[key.ch]) {
+          sparkle(tile, 16);
+          say(cast[key.ch]);
+          return;
+        }
+        cast[key.ch] = KOCO_LINES[Math.floor(Math.random() * KOCO_LINES.length)];
+        castCount++;
+        tile.classList.add("done");
+        count.textContent = "Заклинаний освоено " + castCount + " из " + KEYS.length;
+        sparkle(tile, 34);
+        say(cast[key.ch]);
+        if (castCount === KEYS.length) {
+          [0, 380, 760].forEach(function (delay) {
+            setTimeout(function () { sparkle(scroll, 50); }, delay);
+          });
+          say("Хе-хе-хе! Все десять заклинаний твои. Ступай на финальный этаж — Синнабон ждёт с грамотой!");
+          gate.disabled = false;
+          gate.classList.remove("gate-locked");
+          gate.classList.add("pulse");
+        }
+      }
+
+      KEYS.forEach(function (key) {
+        var tile = el("button", "tower-rune");
+        tile.type = "button";
+        tile.setAttribute("role", "listitem");
+        tile.setAttribute("aria-label", "Заклинание ключа " + key.ch + " " + key.py + " («" + key.mean + "»)");
+        var hanzi = el("span", "r-hanzi", key.ch);
+        hanzi.setAttribute("lang", "zh-CN");
+        tile.appendChild(hanzi);
+        tile.appendChild(el("span", "r-py", key.py));
+        tile.addEventListener("click", function () { castRune(key, tile); });
+        shelf.appendChild(tile);
+      });
+
+      say(START_LINE);
+
+      resetTower = function () {
+        cast = {};
+        castCount = 0;
+        Array.prototype.forEach.call(shelf.querySelectorAll(".tower-rune"), function (tile) {
+          tile.classList.remove("done");
+        });
+        count.textContent = "Заклинаний освоено 0 из " + KEYS.length;
+        scroll.replaceChildren(el("p", "ts-empty", "Свиток пока пуст… Выбери руну слева!"));
+        gate.disabled = true;
+        gate.classList.add("gate-locked");
+        gate.classList.remove("pulse");
+        say(START_LINE);
+      };
+    }
+
     function saluteFinal() {
       if (salutedFinal) return;
       salutedFinal = true;
@@ -833,6 +974,7 @@
         resetHall();
         if (selectPracticeKey) selectPracticeKey(0);
         if (selectInsideKey) selectInsideKey(0);
+        resetTower();
         salutedFinal = false;
         showFloor("hall");
       });

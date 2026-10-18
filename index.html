@@ -181,17 +181,71 @@
       text-transform: uppercase; letter-spacing: .1em; color: #241b20;
       background: var(--teal); border-radius: 3px; box-shadow: 3px 3px #14101f;
     }
-    .level-badge.n2 { background: var(--lilac); }
-    .level-badge.n3 { background: var(--gold); }
-    .level-badge.n4 { background: #a8d5a0; }
+    .level-badge.n2 { background: #6bbf59; }
+    .level-badge.n3 { background: #b8c0cc; }
+    .level-badge.n4 { background: #9b77c4; }
     .level-badge.gold { background: var(--gold); }
     .level-section h2 { font-size: clamp(18px, 2.6vw, 24px); color: #ffe9c4; line-height: 1.25; }
     .level-lead { color: #d9c8c0; font-size: 12.5px; line-height: 1.55; margin: 6px 0 2px; max-width: 760px; }
     .level-lead b { color: #fff2d9; }
-    .cinnabon-tip { display: flex; align-items: center; gap: 12px; margin: 12px 0 14px; padding: 9px 13px; background: #2c222c; border: 3px solid #5c473f; border-radius: 10px; }
-    .cinnabon-tip img { width: 46px; height: 46px; flex-shrink: 0; image-rendering: pixelated; filter: drop-shadow(2px 2px #201a2b); }
-    .cinnabon-tip p { font-size: 12px; line-height: 1.5; color: #e8dccc; }
-    .cinnabon-tip p b { color: var(--gold); }
+    .floor-tip { display: flex; align-items: center; gap: 12px; margin: 12px 0 14px; padding: 9px 13px; background: #2c222c; border: 3px solid #5c473f; border-radius: 10px; }
+    .floor-tip img { width: 46px; height: 46px; flex-shrink: 0; image-rendering: pixelated; filter: drop-shadow(2px 2px #201a2b); }
+    .floor-tip p { font-size: 12px; line-height: 1.5; color: #e8dccc; }
+    .floor-tip p b { color: var(--gold); }
+
+    .floor-host { margin-left: auto; display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .floor-host img { width: 84px; height: 84px; image-rendering: pixelated; filter: drop-shadow(3px 3px #201a2b); flex-shrink: 0; }
+    .floor-host-name { padding: 4px 10px; border-radius: 9px; border: 2px solid #26421f; background: #6bbf59; color: #1c2b16; font-size: 11px; font-weight: 800; }
+    #practice .floor-host-name { background: #b8c0cc; border-color: #39404f; color: #262c38; }
+    #tower .floor-host-name { background: #9b77c4; border-color: #33254a; color: #241a33; }
+
+    #inside { border-color: #456b3c; background: linear-gradient(180deg, #2a361f, #261d25 130px); }
+    #inside .floor-tip { border-color: #4e9940; }
+    #practice { border-color: #4a5364; background: linear-gradient(180deg, #262f3c, #261d25 130px); }
+    #practice .floor-tip { border-color: #8b93a3; }
+    #tower { border-color: #5a4674; background: linear-gradient(180deg, #322541, #261d25 150px); }
+    #tower .floor-tip { border-color: #7b4fa6; }
+
+    .tower-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 18px; align-items: start; margin-top: 4px; }
+    .tower-rack { padding: 12px 14px 14px; background: #2c2233; border: 3px solid #5a4674; border-radius: 8px; }
+    .tower-runes { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px; margin: 10px 0 12px; }
+    .tower-rune {
+      display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 4px 8px;
+      background: var(--paper); color: var(--paper-ink); border: 3px solid #8a5fb8; border-bottom-width: 5px;
+      border-radius: 3px; box-shadow: 3px 3px #14101f; text-align: center; transition: transform .12s ease;
+    }
+    .tower-rune:hover { transform: translateY(-2px); }
+    .tower-rune:active { transform: translateY(2px); }
+    .tower-rune .r-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 32px; line-height: 1.05; }
+    .tower-rune .r-py { font-size: 10px; font-weight: 800; }
+    .tower-rune.done { background: #9b77c4; border-color: #f4cc85; color: #fff; box-shadow: 0 0 10px #f4cc8566, 3px 3px #14101f; }
+    .tower-rune.done .r-py { color: #f6edff; }
+    .tower-count { display: inline-block; padding: 4px 10px; background: #3a2a45; border: 2px solid #9b77c4; border-radius: 8px; color: #cbb1fb; font-size: 11px; font-weight: 800; }
+    .tower-scroll { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--paper); color: var(--paper-ink); border: 3px solid #8a5fb8; border-bottom-width: 5px; border-radius: 3px; box-shadow: 3px 3px #14101f; }
+    .tower-scroll .ts-empty { color: #8a7a92; font-size: 12px; text-align: center; padding: 30px 0; }
+    .ts-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .ts-glyph { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 54px; line-height: 1; color: #4a2d6e; }
+    .ts-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .ts-py { font-size: 17px; font-weight: 800; }
+    .ts-mean { font-size: 11px; font-weight: 800; color: #5c4a58; text-transform: uppercase; letter-spacing: .08em; }
+    .ts-head .sound-button { margin: 0; min-height: 34px; }
+    .ts-morph { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 10px; background: #f2eafc; border: 2px dashed #8a5fb8; border-radius: 3px; font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 40px; line-height: 1; color: #6b3fa0; }
+    .ts-morph .ts-arrow { font-family: "Nunito", sans-serif; font-size: 22px; font-weight: 800; color: #c98a1f; }
+    .ts-form-note { font-size: 11.5px; line-height: 1.5; color: #4a3341; text-align: center; }
+    .ts-form-note b { color: #6b3fa0; }
+    .ts-details { margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px 14px; }
+    .ts-details .detail { border-top: 1px solid #c5a681; }
+    .ts-word { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px; background: #fff8e6; border: 2px solid #c5a681; border-radius: 3px; }
+    .ts-word .w-ch { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 38px; line-height: 1; color: #3d2c34; }
+    .ts-word .w-meta { display: flex; flex-direction: column; gap: 1px; }
+    .ts-word .w-py { font-size: 13px; font-weight: 800; }
+    .ts-word .w-tr { font-size: 10.5px; color: #5c4a58; }
+    .ts-word .sound-button { margin: 0; min-height: 34px; }
+    .ts-pic { width: 100%; }
+    .ts-pic img { display: block; width: 100%; max-width: 300px; margin: 0 auto; border: 4px solid #8a5fb8; border-radius: 4px; background: #fff8e6; box-shadow: 4px 4px #191423; }
+    .tower-line { min-height: 2.6em; margin: 14px 0 0; color: #e2d4f2; font-size: 12px; line-height: 1.5; text-align: center; }
+    .tower-line b { color: #f4cc85; }
+    #tower-gate.gate-locked { filter: grayscale(.7) brightness(.8); opacity: .55; cursor: not-allowed; }
 
     .glyph-card {
       display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -517,6 +571,9 @@
       .ip-parts { font-size: 32px; }
       .ip-parts span { padding: 4px 8px; border-bottom-width: 5px; }
       .sel-row { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
+      .tower-grid { grid-template-columns: minmax(0, 1fr); }
+      .floor-host { margin-left: 0; }
+      .floor-host img { width: 64px; height: 64px; }
     }
     @media (max-width: 480px) {
       .lesson-shell { padding-top: max(12px, env(safe-area-inset-top)); padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
@@ -577,7 +634,8 @@
         <button type="button" class="current" data-floor="hall" style="--c:#80e5dc"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v15"/><path d="M3 21h18"/><path d="M12.5 12h.01"/></svg></span><span class="f-num">1</span><span class="f-label">Холл</span></button>
         <button type="button" data-floor="inside" style="--c:#f4cc85"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="f-num">2</span><span class="f-label">Ключ в деле</span></button>
         <button type="button" data-floor="practice" style="--c:#a8d5a0"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span class="f-num">3</span><span class="f-label">Письмо</span></button>
-        <button type="button" data-floor="final" style="--c:#f2a3a3"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></span><span class="f-num">4</span><span class="f-label">Финал</span></button>
+        <button type="button" data-floor="tower" style="--c:#cbb1fb"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.3 1.1 6-5.4-3-5.4 3 1.1-6L3.2 9.4l6.1-.8Z"/></svg></span><span class="f-num">4</span><span class="f-label">Башня КоКо</span></button>
+        <button type="button" data-floor="final" style="--c:#f2a3a3"><span class="f-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></span><span class="f-num">5</span><span class="f-label">Финал</span></button>
       </nav>
     </header>
 
@@ -617,7 +675,7 @@
     <section class="level-section" id="hall" aria-labelledby="hall-title">
       <div class="section-head"><span class="level-badge">Этаж 1</span><h2 id="hall-title">Холл: что такое ключи</h2></div>
       <p class="level-lead"><b>Ключ</b> (部首 <i>bùshǒu</i>) — часть иероглифа, которая подсказывает его смысл. Например, у знаков «река», «море» и «сок» общий ключ <b>«вода»</b> — все они про жидкость. Ключей всего 214, но даже десятка самых ходовых заметно облегчает жизнь: незнакомый иероглиф перестаёт быть набором закорючек.</p>
-      <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p>Задание: в холле ещё темно, и ключи на полке потемнели. Нажимай на плитки — каждая <b>вспыхнет, прозвучит и откроет свою страницу в книге</b>. Зажги все десять — и вывеска мастерской засияет золотом!</p></div>
+      <div class="floor-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p>Задание: в холле ещё темно, и ключи на полке потемнели. Нажимай на плитки — каждая <b>вспыхнет, прозвучит и откроет свою страницу в книге</b>. Зажги все десять — и вывеска мастерской засияет золотом!</p></div>
       <div class="hall-rack" id="hall-rack">
         <div class="hall-rack-head"><span class="object-label">Полка ключей</span><span class="hall-count" id="hall-count" role="status">Зажжено 0 из 10</span></div>
         <div class="keys-grid" id="hall-strip" role="list" aria-label="Десять ключей урока"></div>
@@ -651,9 +709,9 @@
     </section>
 
     <section class="level-section" id="inside" aria-labelledby="inside-title" hidden>
-      <div class="section-head"><span class="level-badge n2">Этаж 2</span><h2 id="inside-title">Ключ в деле: как он прячется в иероглифах</h2></div>
+      <div class="section-head"><span class="level-badge n2">Этаж 2</span><h2 id="inside-title">Ключ в деле: как он прячется в иероглифах</h2><div class="floor-host"><span class="floor-host-name">Жаберт</span><img src="assets/characters/zhabert.svg" alt="Жаберт — жаб-художник с кистью" width="84" height="84"></div></div>
       <p class="level-lead">Выбери ключ на полке слева, затем <b>выбери одно из трёх слов</b>. Под знаком вопроса <b>собери иероглиф слова из кубиков</b> — нажимай их <b>в любом порядке</b>: бирюзовый кубик это сам ключ, сиреневые — вторые части. Соберёшь — слово вспыхнет на мольберте, а кубики расскажут свои роли. Ярлык под кубиками — роль ключа в этом слове: <b>бирюзовый</b> — прямой смысл, <b>янтарный</b> — переносный, <b>фиолетовый</b> — осталась лишь форма.</p>
-      <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p>Правило мастерской: ключ отвечает за <b>смысл</b>, а вторая часть часто подсказывает <b>звучание</b>. Собери по иероглифу для каждого из трёх слов — и правило станет очевидным!</p></div>
+      <div class="floor-tip"><img src="assets/characters/zhabert.svg" alt="" width="46" height="46"><p>Квак-правило от Жаберта: <b>ключ</b> отвечает за <b>смысл</b>, а вторая часть слова часто подсказывает <b>звучание</b>. Собери по иероглифу для каждого из трёх слов — и сам всё увидишь!</p></div>
       <div class="inside-grid">
         <div class="ip-shelf" id="inside-shelf" role="list" aria-label="Полка выбора ключа"></div>
         <section class="inside-panel" id="inside-panel" aria-label="Досье выбранного ключа"></section>
@@ -662,9 +720,9 @@
     </section>
 
     <section class="level-section" id="practice" aria-labelledby="practice-title" hidden>
-      <div class="section-head"><span class="level-badge n3">Этаж 3</span><h2 id="practice-title">Стол ученика: напиши ключ сам</h2></div>
+      <div class="section-head"><span class="level-badge n3">Этаж 3</span><h2 id="practice-title">Стол ученика: напиши ключ сам</h2><div class="floor-host"><span class="floor-host-name">Робо</span><img src="assets/characters/robot.svg" alt="Робот с жёлтой антенной и красным сердцем" width="84" height="84"></div></div>
       <p class="level-lead">Выбери ключ на полке сверху и <b>обведи его пальцем или мышкой</b> прямо в тетрадной клетке. Очередь черт подскажут точки, а если застрял — жми «Показать черты».</p>
-      <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p>Не спеши: одна черта — одно движение кисти, без отрыва. За каждый написанный ключ — искры и мурчание!</p></div>
+      <div class="floor-tip"><img src="assets/characters/robot.svg" alt="" width="46" height="46"><p>Робо-режим: одна черта — одно движение кисти, <b>без отрыва</b>. Точки подскажут порядок. За каждый написанный ключ Робо включает искры в честь твоего сердца-процессора!</p></div>
       <section class="writer-panel" aria-labelledby="writer-title">
         <div class="sel-row" id="writer-select" role="list" aria-label="Выбор ключа для письма"></div>
         <div class="writer-heading"><div><div class="object-label">Тренажёр письма</div><h3 id="writer-title">Напиши <span class="hanzi-inline" id="w-char" lang="zh-CN">水</span></h3></div><span class="practice-badge" id="w-badge">4 черты</span></div>
@@ -675,12 +733,28 @@
         <div class="writer-actions"><button class="action-button" type="button" id="w-animate">Показать черты</button><button class="action-button primary" type="button" id="w-retry">Попробовать заново</button></div>
         <div class="success-msg" id="w-success" role="status" hidden>Ключ написан верно! Синнабон одобрительно мурчит.</div>
       </section>
-      <div class="finale-actions" style="margin-top: 16px;"><button class="action-button primary" type="button" data-goto="final">Финал · Получить грамоту →</button></div>
+      <div class="finale-actions" style="margin-top: 16px;"><button class="action-button primary" type="button" data-goto="tower">Этаж 4 · Башня КоКо →</button></div>
+    </section>
+
+    <section class="level-section" id="tower" aria-labelledby="tower-title" hidden>
+      <div class="section-head"><span class="level-badge n4">Этаж 4</span><h2 id="tower-title">Башня мага КоКо: превращения ключей</h2><div class="floor-host"><span class="floor-host-name">КоКо</span><img src="assets/characters/wizard.svg" alt="Хитрый маг КоКо в остроконечной шляпе со звездой" width="84" height="84"></div></div>
+      <p class="level-lead">На вершине мастерской живёт <b>хитрый маг КоКо</b>. Его коронный фокус — <b>превращения ключей</b>: сам по себе ключ выглядит одним знаком, а внутри иероглифа надевает другой облик — 水 превращается в <span class="hanzi-inline">氵</span>, 人 — в <span class="hanzi-inline">亻</span>. Нажимай на руны на полке — КоКо покажет все десять своих фокусов и откроет путь к грамоте.</p>
+      <div class="floor-tip"><img src="assets/characters/wizard.svg" alt="" width="46" height="46"><p>Секрет мага прост: <b>ключ — заклинание смысла</b>. Узнай его в любом обличье — и даже незнакомый иероглиф сам расскажет, о чём он. Ну-ка, попробуй перехитрить меня! Хе-хе.</p></div>
+      <div class="tower-grid">
+        <div class="tower-rack">
+          <span class="object-label">Полка рун</span>
+          <div class="tower-runes" id="tower-runes" role="list" aria-label="Десять рун мага КоКо"></div>
+          <span class="tower-count" id="tower-count" role="status">Заклинаний освоено 0 из 10</span>
+        </div>
+        <section class="tower-scroll" id="tower-scroll" aria-label="Свиток с тайной ключа"><p class="ts-empty">Свиток пока пуст… Выбери руну слева!</p></section>
+      </div>
+      <p class="tower-line" id="tower-line" role="status"></p>
+      <div class="finale-actions" style="margin-top: 16px;"><button class="action-button primary gate-locked" type="button" id="tower-gate" data-goto="final" disabled>Финал · Получить грамоту →</button></div>
     </section>
 
     <section class="level-section" id="final" aria-labelledby="final-title" hidden>
-      <div class="section-head"><span class="level-badge gold">Финал</span><h2 id="final-title">Десять ключей — в кармане!</h2></div>
-      <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p id="final-bubble">Ты прошёл(ла) все этажи мастерской! Теперь, встретив незнакомый иероглиф, сначала ищи в нём знакомый ключ — он шепнёт, о чём этот знак. Держи блюдце молока!</p></div>
+      <div class="section-head"><span class="level-badge gold">Этаж 5 · Финал</span><h2 id="final-title">Десять ключей — в кармане!</h2></div>
+      <div class="floor-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p id="final-bubble">Ты прошёл(ла) все этажи мастерской и перехитрил(а) даже мага КоКо! Теперь, встретив незнакомый иероглиф, сначала ищи в нём знакомый ключ — он шепнёт, о чём этот знак. Держи блюдце молока!</p></div>
       <div class="diploma" id="diploma" aria-label="Грамота подмастерья мастерской ключей"></div>
       <div class="finale-actions"><button class="action-button primary" type="button" id="restart-btn">Пройти урок заново</button></div>
     </section>
