@@ -230,10 +230,10 @@
     ]
   };
   var KOCO_TONE = {
-    1: "Слышишь? Голос ровный и высокий — первый тон! Руна прилетела на красную полку. Нарисуй эту песню на резонаторе!",
-    2: "Голос идёт вверх, как удивлённый вопрос, — второй тон! Оранжевая полка приняла руну. Теперь нарисуй мелодию!",
-    3: "Голос нырнул вниз и снова взлетел — хитрый третий тон! Голубая полка запомнила руну. Нарисуй её песню!",
-    4: "Голос упал сверху — решительный четвёртый тон! Фиолетовая полка ждёт твоей линии на резонаторе!"
+    1: "Верный росчерк! Голос ровный и высокий — первый тон! Руна летит на красную доску.",
+    2: "Точно! Голос идёт вверх — второй тон! Оранжевая доска приняла руну.",
+    3: "Вот это нырок — вниз и снова вверх! Третий тон, голубая доска твоя!",
+    4: "Решительно! Голос упал сверху — четвёртый тон! Фиолетовая доска запомнила руну."
   };
   var NOTE_DEFAULT = "Собрано! Нажми на кубик — расскажу его роль";
   var FLOORS = ["hall", "inside", "practice", "tower", "final"];
@@ -998,7 +998,6 @@
       var userPath = document.getElementById("user-path");
       if (!shelf || !sGlyph || !path || !svgEl || !userPath) return;
       var plotBox = svgEl.parentNode;
-      var sung = {};
       var placed = {};
       var towerDone = false;
       var current = null;
@@ -1010,8 +1009,8 @@
       var guideCtx = null;
       var guideOsc = null;
       var guideGain = null;
-      var START_LINE = "Выбери руну: послушай её мелодию — и она прилетит на полку своего тона. Потом нарисуй песню рукой на резонаторе. Хе-хе!";
-      var INVITE_LINE = "Послушай мелодию — и проведи линию на резонаторе. Хе-хе!";
+      var START_LINE = "Выбери руну и послушай её мелодию — потом ровно по пунктирной кривой проведи пальцем по резонатору. Верный росчерк отправит руну на доску своего тона!";
+      var INVITE_LINE = "Слушай мелодию — и повтори её точным росчерком на резонаторе!";
       var TONE_PATHS = {
         1: "M14 18 C 70 16, 150 18, 204 20",
         2: "M14 58 C 60 46, 120 26, 204 12",
@@ -1033,7 +1032,7 @@
       function say(text) { if (line) line.textContent = text; }
 
       function masteredCount() {
-        return KEYS.filter(function (k) { return placed[k.ch] && sung[k.ch]; }).length;
+        return KEYS.filter(function (k) { return placed[k.ch]; }).length;
       }
 
       function updateTowerProgress() {
@@ -1044,7 +1043,7 @@
           [0, 380, 760].forEach(function (delay) {
             setTimeout(function () { sparkle(plotBox, 50); }, delay);
           });
-          say("Хе-хе-хе! Все десять рун послушаны и сыграны — зал тонов поёт! Ступай на финальный этаж за грамотой.");
+          say("Хе-хе-хе! Все десять рун стоят на досках тонов — зал поёт! Ступай на финальный этаж за грамотой.");
           gate.disabled = false;
           gate.classList.remove("gate-locked");
           gate.classList.add("pulse");
@@ -1233,18 +1232,30 @@
         if (corr >= 0.72) { bucket = "good"; sparkle(plotBox, 30); }
         else if (corr >= 0.45) { bucket = "mid"; sparkle(plotBox, 14); }
         else bucket = "off";
-        var bucketLines = KOCO_DRAW[bucket];
-        say(bucketLines[Math.floor(Math.random() * bucketLines.length)]);
-        if (current && !sung[current.ch]) {
-          sung[current.ch] = true;
+        if (bucket === "good" && current && !placed[current.ch]) {
+          placed[current.ch] = true;
           var tile = tiles[current.ch];
           if (tile) {
-            tile.classList.add("played");
-            if (placed[current.ch]) tile.classList.add("done");
+            tile.classList.add("placed");
+            tile.classList.add(toneClass(current.t));
           }
-          sparkle(plotBox, 20);
+          var slot = slots[current.t];
+          if (slot) {
+            var copy = el("div", "tone-key " + toneClass(current.t));
+            copy.setAttribute("aria-hidden", "true");
+            var hanziCopy = el("span", "tk-hanzi", current.ch);
+            hanziCopy.setAttribute("lang", "zh-CN");
+            copy.appendChild(hanziCopy);
+            copy.appendChild(el("span", "tk-py", current.py));
+            slot.appendChild(copy);
+            sparkle(slot, 16);
+          }
+          say(KOCO_TONE[current.t] || KOCO_DRAW.good[0]);
           updateTowerProgress();
+          return;
         }
+        var bucketLines = KOCO_DRAW[bucket];
+        say(bucketLines[Math.floor(Math.random() * bucketLines.length)]);
       }
 
       svgEl.addEventListener("pointerdown", function (event) {
@@ -1308,24 +1319,7 @@
         renderAltar(key);
         play(tile, key.audio, key.ch);
         animateTone(1);
-        if (!placed[key.ch]) {
-          placed[key.ch] = true;
-          tile.classList.add("placed");
-          tile.classList.add(toneClass(key.t));
-          var slot = slots[key.t];
-          if (slot) {
-            var copy = el("div", "tone-key " + toneClass(key.t));
-            copy.setAttribute("aria-hidden", "true");
-            var hanziCopy = el("span", "tk-hanzi", key.ch);
-            hanziCopy.setAttribute("lang", "zh-CN");
-            copy.appendChild(hanziCopy);
-            copy.appendChild(el("span", "tk-py", key.py));
-            slot.appendChild(copy);
-            sparkle(slot, 16);
-          }
-          say(KOCO_TONE[key.t] || INVITE_LINE);
-          updateTowerProgress();
-        } else if (sung[key.ch]) {
+        if (placed[key.ch]) {
           sparkle(tile, 14);
           say(KOCO_LINES[Math.floor(Math.random() * KOCO_LINES.length)]);
         } else {
@@ -1367,7 +1361,6 @@
       say(START_LINE);
 
       resetTower = function () {
-        sung = {};
         placed = {};
         towerDone = false;
         softStopDraw();

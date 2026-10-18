@@ -408,51 +408,52 @@
     .hero-button.casting .spell-glyph.g5 { animation-delay: .34s; }
     .hero-button.casting .spell-glyph.g6 { animation-delay: .42s; }
     @keyframes glyphRise { 0% { opacity: 0; transform: translateY(8px) scale(.7); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-64px) scale(1.15); } }
-    .tower-bench { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; align-items: start; }
-    .tower-shelf { padding: 16px 16px 18px; background: #27153f; border: 5px solid #79558e; border-top: 10px solid #9b75b0; box-shadow: inset 0 0 0 3px #3c2454, 5px 5px #170a2e; }
+    .tower-bench { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .tower-rack { position: relative; padding: 12px 14px 16px; background: #27153f; border: 5px solid #79558e; border-top: 10px solid #9b75b0; box-shadow: inset 0 0 0 3px #3c2454, 5px 5px #170a2e; }
+    .tower-rack-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .tower-rack::after { content: ""; display: block; margin-top: 12px; height: 12px; background: repeating-linear-gradient(90deg, #5a3a78 0 26px, #4a2c6e 26px 52px); border: 2px solid #79558e; }
     #tower .object-label { color: #c9b4f2; }
     #tower .object-label::before { background: #9b6fd8; box-shadow: 0 0 0 2px #57377b; }
-    .tower-runes { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin: 12px 0 14px; }
-    .tower-rune { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 4px 10px; background: #efe6ff; color: #2c1d4e; border: 3px solid #9b6fd8; border-bottom-width: 6px; border-radius: 3px; box-shadow: 3px 3px #170a2e; text-align: center; transition: transform .12s ease; }
+    .tower-runes { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 8px; margin: 0; }
+    .tower-rune { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 2px 8px; background: #efe6ff; color: #2c1d4e; border: 3px solid #9b6fd8; border-bottom-width: 6px; border-radius: 3px; box-shadow: 3px 3px #170a2e; text-align: center; transition: transform .12s ease; }
     .tower-rune:hover { transform: translateY(-2px); }
     .tower-rune:active { transform: translateY(2px); }
-    .tower-rune .r-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 32px; line-height: 1.05; }
-    .tower-rune .r-py { font-size: 10px; font-weight: 800; color: #6c3fb5; }
-    .tower-rune.done { background: #6c3fb5; border-color: #f4cc85; color: #fff; box-shadow: 0 0 12px #f4cc8566, 3px 3px #170a2e; }
-    .tower-rune.done .r-py { color: #ffe9a8; }
+    .tower-rune .r-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 26px; line-height: 1.05; }
+    .tower-rune .r-py { font-size: 8.5px; font-weight: 800; color: #6c3fb5; overflow-wrap: anywhere; }
     .tower-count { display: inline-block; padding: 5px 12px; background: #3a2069; border: 2px solid #9b6fd8; border-radius: 8px; color: #efe6ff; font-size: 11px; font-weight: 800; }
     .tower-line { min-height: 2.6em; margin: 16px 46px 0; color: #e4d3ff; font-size: 12.5px; line-height: 1.5; text-align: center; }
     .tower-line b { color: #f4cc85; }
-    .sound-altar { position: relative; padding: 20px 20px 22px; background: #efe6ff; color: #2c1d4e; border: 4px solid #8f6bd0; border-bottom-width: 9px; border-radius: 3px; box-shadow: inset 0 0 0 3px #ded0f4, 5px 5px #170a2e; }
+    .sound-altar { position: relative; padding: 18px 20px 22px; background: #1d0e33; color: #efe6ff; border: 4px solid #9b6fd8; border-bottom-width: 9px; border-radius: 3px; box-shadow: inset 0 0 0 3px #3c2454, inset 0 0 34px #56309b66, 5px 5px #170a2e; }
     .object-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
-    .object-heading h3 { font-size: 17px; color: #3a2069; }
-    .object-heading span { font-size: 10px; color: #6c3fb5; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    .object-heading h3 { font-size: 17px; color: #efe6ff; }
+    .object-heading span { font-size: 10px; color: #c9b4f2; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    .altar-stage { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 18px; align-items: center; }
     .crystal-chamber { position: relative; display: grid; place-items: center; min-height: 190px; padding: 16px 0; isolation: isolate; }
     .sound-crystal { position: absolute; width: 148px; top: 0; bottom: 0; background: linear-gradient(90deg, #56309b 0 25%, #7647b5 25% 50%, #9b6fd8 50% 54%, #6c3fb5 54% 78%, #43275e 78%); border: 4px solid #cbb2f2; clip-path: polygon(30% 0, 70% 0, 70% 8%, 88% 8%, 88% 20%, 100% 20%, 100% 76%, 88% 76%, 88% 88%, 70% 88%, 70% 100%, 30% 100%, 30% 88%, 12% 88%, 12% 76%, 0 76%, 0 20%, 12% 20%, 12% 8%, 30% 8%); z-index: -1; pointer-events: none; }
     .crystal-reading { text-align: center; }
     .glyph-hero { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 76px; line-height: 1.1; color: #fff; text-shadow: 0 0 20px rgba(251, 140, 0, .8); }
-    .pinyin-hero { font-size: 24px; font-weight: 800; line-height: 1.3; text-shadow: 0 0 12px rgba(251, 140, 0, .55); }
-    .crystal-caption { text-align: center; margin: 10px 0 14px; color: #6c3fb5; font-size: 11.5px; font-weight: 800; }
+    .pinyin-hero { font-size: 24px; font-weight: 800; line-height: 1.3; color: #f3ecff; text-shadow: 0 0 12px rgba(251, 140, 0, .55); }
+    .crystal-caption { text-align: center; margin: 10px 0 14px; color: #c9b4f2; font-size: 11.5px; font-weight: 800; }
     .altar-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
     .sound-altar .sound-button { margin: 0; min-height: 46px; font-size: 12.5px; background: #c9b4f2; color: #2c1d4e; border: 2px solid #9b6fd8; box-shadow: 0 4px #241238; }
     .sound-altar .sound-button:hover { background: #efe6ff; }
     .sound-altar .sound-button:disabled { opacity: .55; cursor: default; }
     .sound-altar .sound-button.speaking { outline-color: #fb8c00; }
-    .tone-plot { text-align: center; padding: 14px 12px 12px; margin-top: 18px; background: #241243; border: 2px solid #6c3fb5; border-radius: 3px; }
+    .tone-plot { text-align: center; padding: 14px 12px 12px; margin-top: 0; background: #2c1548; border: 2px solid #8f6bd0; border-radius: 3px; }
     .tone-plot-label { text-transform: uppercase; letter-spacing: .12em; color: #cbb2f2; font-size: 9px; font-weight: 800; margin-bottom: 8px; }
     .tone-plot svg { width: 100%; max-width: 250px; height: auto; display: block; margin: 0 auto; cursor: crosshair; touch-action: none; }
     #tone-dot { filter: drop-shadow(0 0 4px #fb8c00); }
     .tone-plot-cap { font-size: 12px; line-height: 1.5; color: #c9b4f2; margin: 6px 0 0; }
     .tone-draw-hint { font-size: 11px; line-height: 1.5; color: #f4cc85; margin: 4px 0 0; }
-    .tone-shelves { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
-    .tone-shelf { padding: 10px 10px 12px; background: #27153f; border: 4px solid #79558e; border-top: 8px solid #9b75b0; box-shadow: 5px 5px #170a2e; }
-    .tone-shelf-cap { display: flex; align-items: baseline; gap: 5px; margin: 0 0 8px; font-size: 11px; font-weight: 800; color: #d9c6f5; }
-    .tone-mark { font-size: 15px; font-weight: 800; }
-    .tone-mark.tone-1 { color: #ff6b6b; }
-    .tone-mark.tone-2 { color: #ffb84d; }
-    .tone-mark.tone-3 { color: #6bd4f0; }
-    .tone-mark.tone-4 { color: #c9a2f5; }
-    .tone-slots { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; min-height: 58px; padding: 6px; border: 2px dashed #4a2c6e; }
+    .tone-shelves { display: grid; gap: 10px; margin-top: 24px; }
+    .tone-board { display: grid; grid-template-columns: 122px minmax(0, 1fr); gap: 12px; align-items: stretch; }
+    .tone-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 6px; background: #27153f; border: 3px solid currentColor; box-shadow: 3px 3px #170a2e; font-size: 10px; font-weight: 800; color: #d9c6f5; }
+    .tone-badge .tone-mark { font-size: 20px; font-weight: 800; }
+    .tone-badge.tone-1 { color: #ff6b6b; }
+    .tone-badge.tone-2 { color: #ffb84d; }
+    .tone-badge.tone-3 { color: #6bd4f0; }
+    .tone-badge.tone-4 { color: #c9a2f5; }
+    .tone-slots { display: flex; flex-wrap: wrap; align-items: flex-end; align-content: flex-end; gap: 8px; min-height: 66px; padding: 8px 12px 14px; background: repeating-linear-gradient(0deg, #3c2454 0 14px, #35204c 14px 28px); border: 3px solid #79558e; border-bottom: 8px solid #5a3a78; box-shadow: 5px 5px #170a2e; }
     .tone-key { pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 9px 5px; background: #3a2069; border: 3px solid currentColor; border-radius: 3px; box-shadow: 0 0 9px currentColor, 3px 3px #170a2e; animation: tone-pop .4s ease-out; }
     .tone-key.tone-1 { color: #ff6b6b; }
     .tone-key.tone-2 { color: #ffb84d; }
@@ -465,8 +466,6 @@
     .tower-rune.placed.tone-2 { border-color: #ffb84d; }
     .tower-rune.placed.tone-3 { border-color: #6bd4f0; }
     .tower-rune.placed.tone-4 { border-color: #c9a2f5; }
-    .tower-rune.done.tone-1, .tower-rune.done.tone-2, .tower-rune.done.tone-3, .tower-rune.done.tone-4 { border-color: #f4cc85; }
-    .tower-rune.played::after { content: "✦"; color: #f4cc85; font-size: 12px; line-height: 1; }
     .tone-shelves-hint { margin: 8px 2px 0; }
     .tone-scroll { position: relative; margin: 6px 42px 26px; padding: 22px 24px; border: 4px solid #cbb2f2; border-radius: 3px; color: #2c1d4e; background: #efe6ff; box-shadow: inset 0 0 0 3px #ded0f4, 5px 5px #170a2e; }
     .tone-scroll::before, .tone-scroll::after { content: ""; position: absolute; left: -10px; right: -10px; height: 10px; background: #9b6fd8; border: 3px solid #57377b; }
@@ -811,7 +810,9 @@
       .ip-parts span { padding: 4px 8px; border-bottom-width: 5px; }
       .sel-row { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
       .hut-bench, .lab-bench, .tower-bench { grid-template-columns: minmax(0, 1fr); }
-      .tone-shelves { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tower-runes { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .altar-stage { grid-template-columns: minmax(0, 1fr); }
+      .tone-board { grid-template-columns: 96px minmax(0, 1fr); }
       .room-head { grid-template-columns: 84px minmax(0, 1fr); }
       .room-side { display: none; }
       .room-window, .arch-window { height: 124px; border-width: 5px; }
@@ -824,7 +825,8 @@
       .tower-line { margin-left: 28px; margin-right: 28px; }
     }
     @media (max-width: 480px) {
-      .tone-shelves { grid-template-columns: minmax(0, 1fr); }
+      .tone-board { grid-template-columns: minmax(0, 1fr); }
+      .tone-badge { flex-direction: row; gap: 8px; }
       .lesson-shell { padding-top: max(12px, env(safe-area-inset-top)); padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
       .topbar { flex-wrap: wrap; justify-content: center; }
       .floor-track button .f-ico { display: none; }
@@ -1100,52 +1102,55 @@
           </div>
         </section>
         <div class="room-bench tower-bench">
-          <section class="tower-shelf" aria-label="Полка мелодий">
-            <span class="object-label">Полка мелодий</span>
+          <div class="tower-rack">
+            <div class="tower-rack-head"><span class="object-label">Полка мелодий</span><span class="tower-count" id="tower-count" role="status">Рун освоено 0 из 10</span></div>
             <div class="tower-runes" id="tower-runes" role="list" aria-label="Десять рун звуковой башни"></div>
-            <span class="tower-count" id="tower-count" role="status">Рун освоено 0 из 10</span>
-          </section>
+          </div>
           <section class="sound-altar" aria-label="Кристалл звучания">
-            <div class="object-heading"><h3>Кристалл звучания</h3><span>Слушай и повторяй</span></div>
-            <div class="crystal-chamber">
-              <div class="sound-crystal" aria-hidden="true"></div>
-              <div class="crystal-reading">
-                <div class="glyph-hero" id="s-glyph" lang="zh-CN" aria-live="polite">♪</div>
-                <div class="pinyin-hero" id="s-py">выбери руну</div>
+            <div class="object-heading"><h3>Кристалл звучания</h3><span>Слушай и рисуй</span></div>
+            <div class="altar-stage">
+              <div class="altar-voice">
+                <div class="crystal-chamber">
+                  <div class="sound-crystal" aria-hidden="true"></div>
+                  <div class="crystal-reading">
+                    <div class="glyph-hero" id="s-glyph" lang="zh-CN" aria-live="polite">♪</div>
+                    <div class="pinyin-hero" id="s-py">выбери руну</div>
+                  </div>
+                </div>
+                <p class="crystal-caption" id="s-tone-cap">Кристалл ждёт свою руну…</p>
+                <div class="altar-actions">
+                  <button class="sound-button" type="button" id="s-play" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>Послушать</button>
+                  <button class="sound-button" type="button" id="s-slow" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 5v14M16 5v14M3 12h18"/><path d="m6 9-3 3 3 3m12-6 3 3-3 3"/></svg>Медленно</button>
+                </div>
               </div>
-            </div>
-            <p class="crystal-caption" id="s-tone-cap">Кристалл ждёт свою руну…</p>
-            <div class="altar-actions">
-              <button class="sound-button" type="button" id="s-play" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>Послушать</button>
-              <button class="sound-button" type="button" id="s-slow" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 5v14M16 5v14M3 12h18"/><path d="m6 9-3 3 3 3m12-6 3 3-3 3"/></svg>Медленно</button>
-            </div>
-            <div class="tone-plot">
-              <div class="tone-plot-label">Магический резонатор</div>
-              <svg id="tone-svg" viewBox="0 0 220 70" touch-action="none" role="img" aria-label="Резонатор: кривая мелодии тона — проведи пальцем, чтобы нарисовать мелодию"><line x1="14" y1="62" x2="206" y2="62" stroke="#5c3a80" stroke-width="2" stroke-dasharray="3 4"/><path id="tone-path" d="M14 58 C 60 46, 120 26, 204 12" fill="none" stroke="#c9b4f2" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/><path id="user-path" d="" fill="none" stroke="#f4cc85" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/><circle id="tone-dot" r="6" fill="#fb8c00" cx="14" cy="58" opacity="0"/><text x="14" y="10" fill="#c9b4f2" font-size="10" text-anchor="middle">старт</text></svg>
-              <p class="tone-draw-hint">Проведи пальцем через весь резонатор — нарисуй мелодию тона, и кристалл запоёт под твоей рукой.</p>
-              <p class="tone-plot-cap" id="tone-plot-cap">Выбери руну — резонатор нарисует её мелодию.</p>
+              <div class="tone-plot">
+                <div class="tone-plot-label">Магический резонатор</div>
+                <svg id="tone-svg" viewBox="0 0 220 70" touch-action="none" role="img" aria-label="Резонатор: кривая мелодии тона — проведи пальцем, чтобы нарисовать мелодию"><line x1="14" y1="62" x2="206" y2="62" stroke="#5c3a80" stroke-width="2" stroke-dasharray="3 4"/><path id="tone-path" d="M14 58 C 60 46, 120 26, 204 12" fill="none" stroke="#c9b4f2" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/><path id="user-path" d="" fill="none" stroke="#f4cc85" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/><circle id="tone-dot" r="6" fill="#fb8c00" cx="14" cy="58" opacity="0"/><text x="14" y="10" fill="#c9b4f2" font-size="10" text-anchor="middle">старт</text></svg>
+                <p class="tone-draw-hint">Проведи пальцем через весь резонатор ровно по пунктирной кривой — точный росчерк отправит руну на доску своего тона.</p>
+                <p class="tone-plot-cap" id="tone-plot-cap">Выбери руну — резонатор нарисует её мелодию.</p>
+              </div>
             </div>
           </section>
         </div>
         <div class="tone-shelves" id="tone-shelves" aria-label="Полки тонов звуковой башни">
-          <section class="tone-shelf" aria-label="Первый тон — ровно">
-            <h4 class="tone-shelf-cap"><span class="tone-mark tone-1" lang="zh-CN">ā</span>1-й тон · ровно</h4>
+          <div class="tone-board" aria-label="Первый тон — ровно">
+            <span class="tone-badge tone-1"><b class="tone-mark" lang="zh-CN">ā</b>1-й · ровно</span>
             <div class="tone-slots" id="tone-slots-1"></div>
-          </section>
-          <section class="tone-shelf" aria-label="Второй тон — вверх">
-            <h4 class="tone-shelf-cap"><span class="tone-mark tone-2" lang="zh-CN">á</span>2-й тон · вверх</h4>
+          </div>
+          <div class="tone-board" aria-label="Второй тон — вверх">
+            <span class="tone-badge tone-2"><b class="tone-mark" lang="zh-CN">á</b>2-й · вверх</span>
             <div class="tone-slots" id="tone-slots-2"></div>
-          </section>
-          <section class="tone-shelf" aria-label="Третий тон — вниз и вверх">
-            <h4 class="tone-shelf-cap"><span class="tone-mark tone-3" lang="zh-CN">ǎ</span>3-й тон · вниз-вверх</h4>
+          </div>
+          <div class="tone-board" aria-label="Третий тон — вниз и вверх">
+            <span class="tone-badge tone-3"><b class="tone-mark" lang="zh-CN">ǎ</b>3-й · вниз-вверх</span>
             <div class="tone-slots" id="tone-slots-3"></div>
-          </section>
-          <section class="tone-shelf" aria-label="Четвёртый тон — вниз">
-            <h4 class="tone-shelf-cap"><span class="tone-mark tone-4" lang="zh-CN">à</span>4-й тон · вниз</h4>
+          </div>
+          <div class="tone-board" aria-label="Четвёртый тон — вниз">
+            <span class="tone-badge tone-4"><b class="tone-mark" lang="zh-CN">à</b>4-й · вниз</span>
             <div class="tone-slots" id="tone-slots-4"></div>
-          </section>
+          </div>
         </div>
-        <p class="tone-draw-hint tone-shelves-hint">Послушанная руна сама прилетает на полку своего тона. Руна освоена, когда послушана И сыграна на резонаторе.</p>
+        <p class="tone-draw-hint tone-shelves-hint">Нарисуй мелодию точно — и руна прилетит на доску своего тона: красную ā, оранжевую á, голубую ǎ или фиолетовую à.</p>
         <section class="tone-scroll" aria-labelledby="tones-title">
           <h3 id="tones-title">Свиток четырёх тонов</h3>
           <div class="tone-row"><span class="tone-chip tone-1"><span class="dot"></span>1-й</span><span class="tone-chip tone-2"><span class="dot"></span>2-й</span><span class="tone-chip tone-3"><span class="dot"></span>3-й</span><span class="tone-chip tone-4"><span class="dot"></span>4-й</span><span class="tone-chip tone-0"><span class="dot"></span>нейтр.</span></div>
