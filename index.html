@@ -408,9 +408,8 @@
     .hero-button.casting .spell-glyph.g5 { animation-delay: .34s; }
     .hero-button.casting .spell-glyph.g6 { animation-delay: .42s; }
     @keyframes glyphRise { 0% { opacity: 0; transform: translateY(8px) scale(.7); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-64px) scale(1.15); } }
-    .tower-bench { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
-    .tower-scene { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 20px; align-items: start; }
-    .tower-rack { position: relative; padding: 12px 14px 16px; background: #27153f; border: 5px solid #79558e; border-top: 10px solid #9b75b0; box-shadow: inset 0 0 0 3px #3c2454, 5px 5px #170a2e; }
+    .tower-bench { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); grid-template-areas: "rack rack" "altar shelves" "plot plot"; gap: 24px; }
+    .tower-rack { grid-area: rack; position: relative; padding: 12px 14px 16px; background: #27153f; border: 5px solid #79558e; border-top: 10px solid #9b75b0; box-shadow: inset 0 0 0 3px #3c2454, 5px 5px #170a2e; }
     .tower-rack-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
     .tower-rack::after { content: ""; display: block; margin-top: 12px; height: 12px; background: repeating-linear-gradient(90deg, #5a3a78 0 26px, #4a2c6e 26px 52px); border: 2px solid #79558e; }
     #tower .object-label { color: #c9b4f2; }
@@ -424,11 +423,10 @@
     .tower-count { display: inline-block; padding: 5px 12px; background: #3a2069; border: 2px solid #9b6fd8; border-radius: 8px; color: #efe6ff; font-size: 11px; font-weight: 800; }
     .tower-line { min-height: 2.6em; margin: 16px 46px 0; color: #e4d3ff; font-size: 12.5px; line-height: 1.5; text-align: center; }
     .tower-line b { color: #f4cc85; }
-    .sound-altar { position: relative; padding: 18px 20px 22px; background: #1d0e33; color: #efe6ff; border: 4px solid #9b6fd8; border-bottom-width: 9px; border-radius: 3px; box-shadow: inset 0 0 0 3px #3c2454, inset 0 0 34px #56309b66, 5px 5px #170a2e; }
+    .sound-altar { grid-area: altar; position: relative; padding: 18px 20px 22px; background: #1d0e33; color: #efe6ff; border: 4px solid #9b6fd8; border-bottom-width: 9px; border-radius: 3px; box-shadow: inset 0 0 0 3px #3c2454, inset 0 0 34px #56309b66, 5px 5px #170a2e; }
     .object-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
     .object-heading h3 { font-size: 17px; color: #efe6ff; }
     .object-heading span { font-size: 10px; color: #c9b4f2; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-    .altar-stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: center; }
     .crystal-chamber { position: relative; display: grid; place-items: center; min-height: 190px; padding: 16px 0; isolation: isolate; }
     .sound-crystal { position: absolute; width: 148px; top: 0; bottom: 0; background: linear-gradient(90deg, #56309b 0 25%, #7647b5 25% 50%, #9b6fd8 50% 54%, #6c3fb5 54% 78%, #43275e 78%); border: 4px solid #cbb2f2; clip-path: polygon(30% 0, 70% 0, 70% 8%, 88% 8%, 88% 20%, 100% 20%, 100% 76%, 88% 76%, 88% 88%, 70% 88%, 70% 100%, 30% 100%, 30% 88%, 12% 88%, 12% 76%, 0 76%, 0 20%, 12% 20%, 12% 8%, 30% 8%); z-index: -1; pointer-events: none; }
     .crystal-reading { text-align: center; }
@@ -440,13 +438,13 @@
     .sound-altar .sound-button:hover { background: #efe6ff; }
     .sound-altar .sound-button:disabled { opacity: .55; cursor: default; }
     .sound-altar .sound-button.speaking { outline-color: #fb8c00; }
-    .tone-plot { text-align: center; padding: 14px 12px 12px; margin-top: 0; background: #2c1548; border: 2px solid #8f6bd0; border-radius: 3px; }
+    .tone-plot { grid-area: plot; text-align: center; padding: 16px 18px 18px; margin-top: 0; background: #1d0e33; color: #efe6ff; border: 4px solid #9b6fd8; border-bottom-width: 9px; border-radius: 3px; box-shadow: inset 0 0 0 3px #3c2454, inset 0 0 34px #56309b66, 5px 5px #170a2e; }
     .tone-plot-label { text-transform: uppercase; letter-spacing: .12em; color: #cbb2f2; font-size: 9px; font-weight: 800; margin-bottom: 8px; }
-    .tone-plot svg { width: 100%; max-width: 250px; height: auto; display: block; margin: 0 auto; cursor: crosshair; touch-action: none; }
+    .tone-plot svg { width: 100%; max-width: 460px; height: auto; display: block; margin: 0 auto; cursor: crosshair; touch-action: none; }
     #tone-dot { filter: drop-shadow(0 0 4px #fb8c00); }
     .tone-plot-cap { font-size: 12px; line-height: 1.5; color: #c9b4f2; margin: 6px 0 0; }
     .tone-draw-hint { font-size: 11px; line-height: 1.5; color: #f4cc85; margin: 4px 0 0; }
-    .tone-shelves { display: grid; gap: 10px; margin-top: 0; }
+    .tone-shelves { grid-area: shelves; display: grid; gap: 10px; margin-top: 0; }
     .tone-board { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 10px; align-items: stretch; }
     .tone-badge { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 6px; background: #27153f; border: 3px solid currentColor; box-shadow: 3px 3px #170a2e; font-size: 10px; font-weight: 800; color: #d9c6f5; }
     .tone-badge .tone-mark { font-size: 20px; font-weight: 800; }
@@ -810,11 +808,9 @@
       .ip-parts { font-size: 32px; }
       .ip-parts span { padding: 4px 8px; border-bottom-width: 5px; }
       .sel-row { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
-      .hut-bench, .lab-bench, .tower-bench { grid-template-columns: minmax(0, 1fr); }
+      .hut-bench, .lab-bench { grid-template-columns: minmax(0, 1fr); }
+      .tower-bench { grid-template-columns: minmax(0, 1fr); grid-template-areas: "rack" "altar" "shelves" "plot"; }
       .tower-runes { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-      .tower-scene { display: flex; flex-direction: column; gap: 24px; }
-      .tower-scene .sound-altar { order: 1; }
-      .tower-scene .tone-shelves { order: 2; }
       .tone-board { grid-template-columns: 96px minmax(0, 1fr); }
       .room-head { grid-template-columns: 84px minmax(0, 1fr); }
       .room-side { display: none; }
@@ -1109,8 +1105,7 @@
             <div class="tower-rack-head"><span class="object-label">Полка мелодий</span><span class="tower-count" id="tower-count" role="status">Рун освоено 0 из 10</span></div>
             <div class="tower-runes" id="tower-runes" role="list" aria-label="Десять рун звуковой башни"></div>
           </div>
-          <div class="tower-scene">
-            <div class="tone-shelves" id="tone-shelves" aria-label="Полки тонов звуковой башни">
+          <div class="tone-shelves" id="tone-shelves" aria-label="Полки тонов звуковой башни">
               <div class="tone-board" aria-label="Первый тон — ровно">
                 <span class="tone-badge tone-1"><b class="tone-mark" lang="zh-CN">ā</b>1-й · ровно</span>
                 <div class="tone-slots" id="tone-slots-1"></div>
@@ -1130,8 +1125,7 @@
             </div>
             <section class="sound-altar" aria-label="Кристалл звучания">
               <div class="object-heading"><h3>Кристалл звучания</h3><span>Слушай и рисуй</span></div>
-              <div class="altar-stage">
-                <div class="altar-voice">
+              <div class="altar-voice">
                   <div class="crystal-chamber">
                     <div class="sound-crystal" aria-hidden="true"></div>
                     <div class="crystal-reading">
@@ -1144,16 +1138,14 @@
                     <button class="sound-button" type="button" id="s-play" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>Послушать</button>
                     <button class="sound-button" type="button" id="s-slow" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 5v14M16 5v14M3 12h18"/><path d="m6 9-3 3 3 3m12-6 3 3-3 3"/></svg>Медленно</button>
                   </div>
-                </div>
-                <div class="tone-plot">
+              </div>
+            </section>
+            <div class="tone-plot">
                   <div class="tone-plot-label">Магический резонатор</div>
                   <svg id="tone-svg" viewBox="0 0 220 70" touch-action="none" role="img" aria-label="Резонатор: кривая мелодии тона — проведи пальцем, чтобы нарисовать мелодию"><line x1="14" y1="62" x2="206" y2="62" stroke="#5c3a80" stroke-width="2" stroke-dasharray="3 4"/><path id="tone-path" d="M14 58 C 60 46, 120 26, 204 12" fill="none" stroke="#c9b4f2" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/><path id="user-path" d="" fill="none" stroke="#f4cc85" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/><circle id="tone-dot" r="6" fill="#fb8c00" cx="14" cy="58" opacity="0"/><text x="14" y="10" fill="#c9b4f2" font-size="10" text-anchor="middle">старт</text></svg>
                   <p class="tone-draw-hint">Проведи пальцем через весь резонатор ровно по пунктирной кривой — точный росчерк отправит руну на доску своего тона.</p>
                   <p class="tone-plot-cap" id="tone-plot-cap">Выбери руну — резонатор нарисует её мелодию.</p>
-                </div>
-              </div>
-            </section>
-          </div>
+            </div>
         </div>
         <p class="tone-draw-hint tone-shelves-hint">Нарисуй мелодию точно — и руна прилетит на доску своего тона: красную ā, оранжевую á, голубую ǎ или фиолетовую à.</p>
         <section class="tone-scroll" aria-labelledby="tones-title">
