@@ -444,6 +444,30 @@
     #tone-dot { filter: drop-shadow(0 0 4px #fb8c00); }
     .tone-plot-cap { font-size: 12px; line-height: 1.5; color: #c9b4f2; margin: 6px 0 0; }
     .tone-draw-hint { font-size: 11px; line-height: 1.5; color: #f4cc85; margin: 4px 0 0; }
+    .tone-shelves { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+    .tone-shelf { padding: 10px 10px 12px; background: #27153f; border: 4px solid #79558e; border-top: 8px solid #9b75b0; box-shadow: 5px 5px #170a2e; }
+    .tone-shelf-cap { display: flex; align-items: baseline; gap: 5px; margin: 0 0 8px; font-size: 11px; font-weight: 800; color: #d9c6f5; }
+    .tone-mark { font-size: 15px; font-weight: 800; }
+    .tone-mark.tone-1 { color: #ff6b6b; }
+    .tone-mark.tone-2 { color: #ffb84d; }
+    .tone-mark.tone-3 { color: #6bd4f0; }
+    .tone-mark.tone-4 { color: #c9a2f5; }
+    .tone-slots { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; min-height: 58px; padding: 6px; border: 2px dashed #4a2c6e; }
+    .tone-key { pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 9px 5px; background: #3a2069; border: 3px solid currentColor; border-radius: 3px; box-shadow: 0 0 9px currentColor, 3px 3px #170a2e; animation: tone-pop .4s ease-out; }
+    .tone-key.tone-1 { color: #ff6b6b; }
+    .tone-key.tone-2 { color: #ffb84d; }
+    .tone-key.tone-3 { color: #6bd4f0; }
+    .tone-key.tone-4 { color: #c9a2f5; }
+    .tone-key .tk-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 22px; line-height: 1.05; color: #efe6ff; }
+    .tone-key .tk-py { font-size: 9px; font-weight: 800; color: #d9c6f5; }
+    @keyframes tone-pop { from { transform: translateY(-16px) scale(.6); opacity: 0; } }
+    .tower-rune.placed.tone-1 { border-color: #ff6b6b; }
+    .tower-rune.placed.tone-2 { border-color: #ffb84d; }
+    .tower-rune.placed.tone-3 { border-color: #6bd4f0; }
+    .tower-rune.placed.tone-4 { border-color: #c9a2f5; }
+    .tower-rune.done.tone-1, .tower-rune.done.tone-2, .tower-rune.done.tone-3, .tower-rune.done.tone-4 { border-color: #f4cc85; }
+    .tower-rune.played::after { content: "✦"; color: #f4cc85; font-size: 12px; line-height: 1; }
+    .tone-shelves-hint { margin: 8px 2px 0; }
     .tone-scroll { position: relative; margin: 6px 42px 26px; padding: 22px 24px; border: 4px solid #cbb2f2; border-radius: 3px; color: #2c1d4e; background: #efe6ff; box-shadow: inset 0 0 0 3px #ded0f4, 5px 5px #170a2e; }
     .tone-scroll::before, .tone-scroll::after { content: ""; position: absolute; left: -10px; right: -10px; height: 10px; background: #9b6fd8; border: 3px solid #57377b; }
     .tone-scroll::before { top: -10px; }
@@ -787,6 +811,7 @@
       .ip-parts span { padding: 4px 8px; border-bottom-width: 5px; }
       .sel-row { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
       .hut-bench, .lab-bench, .tower-bench { grid-template-columns: minmax(0, 1fr); }
+      .tone-shelves { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .room-head { grid-template-columns: 84px minmax(0, 1fr); }
       .room-side { display: none; }
       .room-window, .arch-window { height: 124px; border-width: 5px; }
@@ -799,6 +824,7 @@
       .tower-line { margin-left: 28px; margin-right: 28px; }
     }
     @media (max-width: 480px) {
+      .tone-shelves { grid-template-columns: minmax(0, 1fr); }
       .lesson-shell { padding-top: max(12px, env(safe-area-inset-top)); padding-left: max(10px, env(safe-area-inset-left)); padding-right: max(10px, env(safe-area-inset-right)); }
       .topbar { flex-wrap: wrap; justify-content: center; }
       .floor-track button .f-ico { display: none; }
@@ -1077,7 +1103,7 @@
           <section class="tower-shelf" aria-label="Полка мелодий">
             <span class="object-label">Полка мелодий</span>
             <div class="tower-runes" id="tower-runes" role="list" aria-label="Десять рун звуковой башни"></div>
-            <span class="tower-count" id="tower-count" role="status">Мелодий сыграно 0 из 10</span>
+            <span class="tower-count" id="tower-count" role="status">Рун освоено 0 из 10</span>
           </section>
           <section class="sound-altar" aria-label="Кристалл звучания">
             <div class="object-heading"><h3>Кристалл звучания</h3><span>Слушай и повторяй</span></div>
@@ -1101,6 +1127,25 @@
             </div>
           </section>
         </div>
+        <div class="tone-shelves" id="tone-shelves" aria-label="Полки тонов звуковой башни">
+          <section class="tone-shelf" aria-label="Первый тон — ровно">
+            <h4 class="tone-shelf-cap"><span class="tone-mark tone-1" lang="zh-CN">ā</span>1-й тон · ровно</h4>
+            <div class="tone-slots" id="tone-slots-1"></div>
+          </section>
+          <section class="tone-shelf" aria-label="Второй тон — вверх">
+            <h4 class="tone-shelf-cap"><span class="tone-mark tone-2" lang="zh-CN">á</span>2-й тон · вверх</h4>
+            <div class="tone-slots" id="tone-slots-2"></div>
+          </section>
+          <section class="tone-shelf" aria-label="Третий тон — вниз и вверх">
+            <h4 class="tone-shelf-cap"><span class="tone-mark tone-3" lang="zh-CN">ǎ</span>3-й тон · вниз-вверх</h4>
+            <div class="tone-slots" id="tone-slots-3"></div>
+          </section>
+          <section class="tone-shelf" aria-label="Четвёртый тон — вниз">
+            <h4 class="tone-shelf-cap"><span class="tone-mark tone-4" lang="zh-CN">à</span>4-й тон · вниз</h4>
+            <div class="tone-slots" id="tone-slots-4"></div>
+          </section>
+        </div>
+        <p class="tone-draw-hint tone-shelves-hint">Послушанная руна сама прилетает на полку своего тона. Руна освоена, когда послушана И сыграна на резонаторе.</p>
         <section class="tone-scroll" aria-labelledby="tones-title">
           <h3 id="tones-title">Свиток четырёх тонов</h3>
           <div class="tone-row"><span class="tone-chip tone-1"><span class="dot"></span>1-й</span><span class="tone-chip tone-2"><span class="dot"></span>2-й</span><span class="tone-chip tone-3"><span class="dot"></span>3-й</span><span class="tone-chip tone-4"><span class="dot"></span>4-й</span><span class="tone-chip tone-0"><span class="dot"></span>нейтр.</span></div>

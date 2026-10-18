@@ -229,6 +229,12 @@
       "Не та мелодия… Кристалл шепнул: «проверь меня ещё разок»."
     ]
   };
+  var KOCO_TONE = {
+    1: "Слышишь? Голос ровный и высокий — первый тон! Руна прилетела на красную полку. Нарисуй эту песню на резонаторе!",
+    2: "Голос идёт вверх, как удивлённый вопрос, — второй тон! Оранжевая полка приняла руну. Теперь нарисуй мелодию!",
+    3: "Голос нырнул вниз и снова взлетел — хитрый третий тон! Голубая полка запомнила руну. Нарисуй её песню!",
+    4: "Голос упал сверху — решительный четвёртый тон! Фиолетовая полка ждёт твоей линии на резонаторе!"
+  };
   var NOTE_DEFAULT = "Собрано! Нажми на кубик — расскажу его роль";
   var FLOORS = ["hall", "inside", "practice", "tower", "final"];
 
@@ -993,15 +999,18 @@
       if (!shelf || !sGlyph || !path || !svgEl || !userPath) return;
       var plotBox = svgEl.parentNode;
       var sung = {};
-      var sungCount = 0;
+      var placed = {};
+      var towerDone = false;
       var current = null;
       var tiles = {};
+      var slots = {};
+      for (var t = 1; t <= 4; t++) slots[t] = document.getElementById("tone-slots-" + t);
       var drawing = false;
       var drawnPts = [];
       var guideCtx = null;
       var guideOsc = null;
       var guideGain = null;
-      var START_LINE = "Выбери руну — послушай её мелодию и нарисуй её рукой на резонаторе. Хе-хе!";
+      var START_LINE = "Выбери руну: послушай её мелодию — и она прилетит на полку своего тона. Потом нарисуй песню рукой на резонаторе. Хе-хе!";
       var INVITE_LINE = "Послушай мелодию — и проведи линию на резонаторе. Хе-хе!";
       var TONE_PATHS = {
         1: "M14 18 C 70 16, 150 18, 204 20",
@@ -1022,6 +1031,25 @@
       var animVersion = 0;
 
       function say(text) { if (line) line.textContent = text; }
+
+      function masteredCount() {
+        return KEYS.filter(function (k) { return placed[k.ch] && sung[k.ch]; }).length;
+      }
+
+      function updateTowerProgress() {
+        var mastered = masteredCount();
+        count.textContent = "Рун освоено " + mastered + " из " + KEYS.length;
+        if (mastered === KEYS.length && !towerDone) {
+          towerDone = true;
+          [0, 380, 760].forEach(function (delay) {
+            setTimeout(function () { sparkle(plotBox, 50); }, delay);
+          });
+          say("Хе-хе-хе! Все десять рун послушаны и сыграны — зал тонов поёт! Ступай на финальный этаж за грамотой.");
+          gate.disabled = false;
+          gate.classList.remove("gate-locked");
+          gate.classList.add("pulse");
+        }
+      }
 
       function stopTone() {
         animVersion++;
@@ -1209,20 +1237,13 @@
         say(bucketLines[Math.floor(Math.random() * bucketLines.length)]);
         if (current && !sung[current.ch]) {
           sung[current.ch] = true;
-          sungCount++;
           var tile = tiles[current.ch];
-          if (tile) tile.classList.add("done");
-          count.textContent = "Мелодий сыграно " + sungCount + " из " + KEYS.length;
-          sparkle(plotBox, 20);
-          if (sungCount === KEYS.length) {
-            [0, 380, 760].forEach(function (delay) {
-              setTimeout(function () { sparkle(plotBox, 50); }, delay);
-            });
-            say("Хе-хе-хе! Все десять мелодий сыграны — концерт удался! Ступай на финальный этаж за грамотой.");
-            gate.disabled = false;
-            gate.classList.remove("gate-locked");
-            gate.classList.add("pulse");
+          if (tile) {
+            tile.classList.add("played");
+            if (placed[current.ch]) tile.classList.add("done");
           }
+          sparkle(plotBox, 20);
+          updateTowerProgress();
         }
       }
 
@@ -1287,7 +1308,24 @@
         renderAltar(key);
         play(tile, key.audio, key.ch);
         animateTone(1);
-        if (sung[key.ch]) {
+        if (!placed[key.ch]) {
+          placed[key.ch] = true;
+          tile.classList.add("placed");
+          tile.classList.add(toneClass(key.t));
+          var slot = slots[key.t];
+          if (slot) {
+            var copy = el("div", "tone-key " + toneClass(key.t));
+            copy.setAttribute("aria-hidden", "true");
+            var hanziCopy = el("span", "tk-hanzi", key.ch);
+            hanziCopy.setAttribute("lang", "zh-CN");
+            copy.appendChild(hanziCopy);
+            copy.appendChild(el("span", "tk-py", key.py));
+            slot.appendChild(copy);
+            sparkle(slot, 16);
+          }
+          say(KOCO_TONE[key.t] || INVITE_LINE);
+          updateTowerProgress();
+        } else if (sung[key.ch]) {
           sparkle(tile, 14);
           say(KOCO_LINES[Math.floor(Math.random() * KOCO_LINES.length)]);
         } else {
@@ -1330,13 +1368,17 @@
 
       resetTower = function () {
         sung = {};
-        sungCount = 0;
+        placed = {};
+        towerDone = false;
         softStopDraw();
         clearUserPath();
         Array.prototype.forEach.call(shelf.querySelectorAll(".tower-rune"), function (tile) {
-          tile.classList.remove("done");
+          tile.className = "tower-rune";
         });
-        count.textContent = "Мелодий сыграно 0 из " + KEYS.length;
+        Object.keys(slots).forEach(function (t) {
+          if (slots[t]) slots[t].innerHTML = "";
+        });
+        count.textContent = "Рун освоено 0 из " + KEYS.length;
         clearAltar();
         gate.disabled = true;
         gate.classList.add("gate-locked");
