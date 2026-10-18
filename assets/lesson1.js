@@ -818,6 +818,12 @@
       var progress = document.getElementById("w-progress");
       var dotsBox = document.getElementById("w-dots");
       var success = document.getElementById("w-success");
+      var formCell = document.getElementById("form-cell");
+      var formTarget = document.getElementById("writer-target-form");
+      var formStatus = document.getElementById("w-form-status");
+      var formProgress = document.getElementById("w-form-progress");
+      var formBar = document.getElementById("w-form-bar");
+      var formCap = document.getElementById("w-form-cap");
       if (!select || !target) return;
 
       var writer = null;
@@ -828,6 +834,12 @@
       var completeTimer = null;
       var resizeTimer = null;
       var dots = [];
+      var formWriter = null;
+      var formSize = 0;
+      var formTotal = 0;
+      var formLoadFailed = false;
+      var formVersion = 0;
+      var formTimer = null;
 
       function setDotsCount(n) {
         dotsBox.replaceChildren();
@@ -910,6 +922,86 @@
         startQuiz();
       }
 
+      function setFormProgress(count, total) {
+        formProgress.textContent = "Черта " + count + " из " + total;
+      }
+
+      function startFormQuiz() {
+        if (!formWriter || formLoadFailed || formCell.hidden) return;
+        var version = ++formVersion;
+        clearTimeout(formTimer);
+        formWriter.cancelQuiz();
+        formWriter.resumeAnimation();
+        if (formTotal) setFormProgress(0, formTotal);
+        formStatus.textContent = "Обведи вторую форму — " + KEYS[currentKey].form;
+        formWriter.quiz({
+          onCorrectStroke: function (data) {
+            if (version !== formVersion) return;
+            if (formTotal) setFormProgress(data.strokeNum + 1, formTotal);
+            formStatus.textContent = "Отлично! Продолжай";
+            sparkle(formTarget, 12);
+          },
+          onMistake: function (data) {
+            if (version !== formVersion) return;
+            formStatus.textContent = "Попробуй черту №" + (data.strokeNum + 1) + " ещё раз";
+          },
+          onComplete: function () {
+            if (version !== formVersion) return;
+            if (formTotal) setFormProgress(formTotal, formTotal);
+            formStatus.textContent = "Форма " + KEYS[currentKey].form + " написана верно! Отличная работа!";
+            sparkle(formTarget, 60);
+            formTimer = setTimeout(function () { if (version === formVersion) sparkle(formTarget, 25); }, 300);
+          }
+        });
+      }
+
+      function createFormWriter() {
+        formVersion++;
+        clearTimeout(formTimer);
+        if (formWriter) { formWriter.cancelQuiz(); formWriter.pauseAnimation(); }
+        formWriter = null;
+        formLoadFailed = false;
+        formTotal = 0;
+        formProgress.textContent = "";
+        formTarget.replaceChildren();
+        var key = KEYS[currentKey];
+        var hasForm = !!(key.form && key.form !== key.ch);
+        formCell.hidden = !hasForm;
+        formBar.hidden = !hasForm;
+        if (hasForm) {
+          formCap.textContent = "В составе: " + key.form + (key.formName ? " — " + key.formName : "") + (key.pos ? " (" + key.pos + ")" : "");
+          formStatus.textContent = "Обведи вторую форму — " + key.form;
+          if (window.HanziWriter) {
+            var size = formTarget.clientWidth || 180;
+            formSize = size;
+            formWriter = HanziWriter.create(formTarget, key.form, {
+              width: size,
+              height: size,
+              padding: 10,
+              showOutline: true,
+              strokeColor: "#35c0d8",
+              outlineColor: "#dacbb4",
+              drawingColor: "#1a7f95",
+              highlightColor: "#b3e5fc",
+              highlightCompleteColor: "#35c0d8",
+              onLoadCharDataError: function () {
+                formLoadFailed = true;
+                formStatus.textContent = "Не удалось загрузить черты формы. Проверь интернет";
+              }
+            });
+            HanziWriter.loadCharacterData(key.form).then(function (data) {
+              formTotal = data && data.strokes ? data.strokes.length : 0;
+              if (!formCell.hidden) setFormProgress(0, formTotal);
+            }).catch(function () {});
+            startFormQuiz();
+          } else {
+            formStatus.textContent = "Тренажёр не загрузился. Проверь интернет и обнови страницу";
+          }
+        } else {
+          formStatus.textContent = "";
+        }
+      }
+
       var currentKey = 0;
 
       selectPracticeKey = function (index) {
@@ -925,6 +1017,7 @@
         setProgress(0, key.strokes);
         success.hidden = true;
         createWriter();
+        createFormWriter();
       };
 
       KEYS.forEach(function (key, i) {
@@ -943,7 +1036,7 @@
         select.appendChild(tile);
       });
 
-      document.getElementById("w-retry").addEventListener("click", startQuiz);
+      document.getElementById("w-retry").addEventListener("click", function () { startQuiz(); startFormQuiz(); });
       document.getElementById("w-animate").addEventListener("click", function () {
         if (!writer || loadFailed) { createWriter(); return; }
         var version = ++quizVersion;
@@ -959,21 +1052,34 @@
             status.textContent = "Теперь твоя очередь — нажми «Попробовать заново»";
           }
         });
+        if (formWriter && !formCell.hidden && !formLoadFailed) {
+          formVersion++;
+          formWriter.cancelQuiz();
+          formWriter.resumeAnimation();
+          formStatus.textContent = "Смотри порядок черт формы";
+          formWriter.animateCharacter();
+        }
       });
 
       window.addEventListener("resize", function () {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function () {
           if (writer && target.clientWidth > 0 && Math.abs(target.clientWidth - writerSize) > 1) createWriter();
+          if (formWriter && !formCell.hidden && formTarget.clientWidth > 0 && Math.abs(formTarget.clientWidth - formSize) > 1) createFormWriter();
         }, 150);
       });
       checkWriterSize = function () {
         if (writer && target.clientWidth > 0 && Math.abs(target.clientWidth - writerSize) > 1) createWriter();
+        if (formWriter && !formCell.hidden && formTarget.clientWidth > 0 && Math.abs(formTarget.clientWidth - formSize) > 1) createFormWriter();
       };
       document.addEventListener("visibilitychange", function () {
         if (!writer) return;
         if (document.hidden) writer.pauseAnimation();
         else writer.resumeAnimation();
+        if (formWriter) {
+          if (document.hidden) formWriter.pauseAnimation();
+          else formWriter.resumeAnimation();
+        }
       });
 
       selectPracticeKey(0);

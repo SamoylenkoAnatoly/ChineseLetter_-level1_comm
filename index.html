@@ -337,7 +337,7 @@
     .power-line { color: #ffe28a; }
     #robot-hero.casting img { animation: powerFlash .8s steps(4); }
     @keyframes powerFlash { 0%, 100% { transform: translateX(0); filter: drop-shadow(4px 4px #04121c) brightness(1); } 20% { transform: translateX(-2px); filter: drop-shadow(4px 4px #04121c) brightness(1.9); } 45% { transform: translateX(2px); filter: drop-shadow(4px 4px #04121c) brightness(1.3); } 70% { transform: translateX(-1px); filter: drop-shadow(4px 4px #04121c) brightness(1.7); } }
-    .lab-bench { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); gap: 26px; align-items: start; }
+    .lab-bench { display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; align-items: start; }
     .instrument { position: relative; min-width: 0; padding: 20px; border: 4px solid #4c6a7b; border-top: 8px solid #7d9aa9; background: rgba(23, 36, 52, 0.92); box-shadow: inset 0 0 0 3px #0b1825, 5px 5px #060e17; }
     .instrument::before { content: ""; position: absolute; right: 10px; top: -6px; width: 4px; height: 4px; background: #dfeaf5; box-shadow: -12px 0 #dfeaf5; pointer-events: none; }
     .instrument-title { font-size: 18px; color: #35c0d8; margin-bottom: 6px; }
@@ -348,6 +348,7 @@
     #practice .sel-tile:hover { background: #15313e; }
     #practice .sel-tile.active { border-color: #35c0d8; box-shadow: 0 0 0 2px #1a7f95, 0 3px #04121c; }
     #practice .sel-tile .s-py { color: #9fd8e6; }
+    #practice .paper-cap { color: #9fd8e6; }
     #practice .writer-panel { background: rgba(23, 36, 52, 0.92); border: 4px solid #4c6a7b; border-top: 8px solid #7d9aa9; border-radius: 0; box-shadow: inset 0 0 0 3px #0b1825, 5px 5px #060e17; padding: 20px; }
     #practice .writer-heading h3 { color: #dfeaf5; }
     #practice .desk-instruction { color: #9fbccc; }
@@ -648,7 +649,7 @@
     .writer-heading h3 { font-size: 20px; color: #ffe3b8; }
     .practice-badge { display: inline-block; padding: 4px 7px; border: 2px solid #80aaa2; background: #243e43; color: var(--teal); font-size: 9.5px; font-weight: 800; border-radius: 3px; }
     .desk-instruction { color: #e4cbbc; font-size: 11.5px; line-height: 1.45; margin-top: 6px; }
-    .sel-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; margin: 14px 0; }
+    .sel-row { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 9px; margin: 14px 0; }
     .sel-tile {
       display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px 6px;
       background: var(--paper); color: var(--paper-ink); border: 3px solid #674651; border-bottom-width: 5px;
@@ -659,7 +660,10 @@
     .sel-tile .s-hanzi { font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 30px; line-height: 1.05; }
     .sel-tile .s-py { font-size: 10px; font-weight: 800; }
     .sel-tile.active { border-color: #0777a7; box-shadow: 0 0 0 3px #0777a7, 3px 3px #14101f; }
-    .paper-wrap { position: relative; margin: 14px 0 12px; }
+    .paper-wrap { position: relative; margin: 14px 0 12px; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 12px; }
+    .paper-slot { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+    .paper-slot .status-text { font-size: 11.5px; min-height: 2.8em; max-width: 224px; margin: 6px 0 0; }
+    .paper-cap { font-size: 10.5px; font-weight: 800; color: #9fbccc; margin-bottom: 6px; text-align: center; }
     .writing-paper { width: min(100%, 224px); aspect-ratio: 1; position: relative; margin: 0 auto; border: 4px solid #c7a477; background: #fff0cf; border-radius: 2px; box-shadow: 4px 4px #2f2230, inset 0 0 0 3px #efdbb3; }
     .writing-paper::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px dashed #c9ac85; }
     .writing-paper::after { content: ""; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px dashed #c9ac85; }
@@ -807,7 +811,7 @@
       .ip-plate .q { font-size: 28px; }
       .ip-parts { font-size: 32px; }
       .ip-parts span { padding: 4px 8px; border-bottom-width: 5px; }
-      .sel-row { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
+      .sel-row { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
       .hut-bench, .lab-bench { grid-template-columns: minmax(0, 1fr); }
       .tower-bench { grid-template-columns: minmax(0, 1fr); grid-template-areas: "rack" "altar" "shelves" "plot"; }
       .tower-runes { grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -1062,9 +1066,9 @@
           <section class="writer-panel" aria-labelledby="writer-title">
             <div class="writer-heading"><div><div class="object-label">Тренажёр письма</div><h3 id="writer-title">Напиши <span class="hanzi-inline" id="w-char" lang="zh-CN">水</span></h3></div><span class="practice-badge" id="w-badge">4 черты</span></div>
             <p class="desk-instruction" id="w-hint">Три капли — и хвост: сначала точка слева, потом две капли и длинная черта.</p>
-            <div class="paper-wrap"><div class="writing-paper"><div class="writer-target" id="writer-target" aria-label="Поле для написания ключа"></div></div><div class="inkpot-deco" aria-hidden="true"></div></div>
-            <p class="status-text" id="w-status" role="status">Обведи ключ пальцем или мышкой</p>
+            <div class="paper-wrap"><div class="paper-slot"><p class="paper-cap">Полная форма</p><div class="writing-paper"><div class="writer-target" id="writer-target" aria-label="Поле для написания ключа"></div></div><p class="status-text" id="w-status" role="status">Обведи ключ пальцем или мышкой</p></div><div class="paper-slot" id="form-cell" hidden><p class="paper-cap" id="w-form-cap">Вторая форма ключа</p><div class="writing-paper"><div class="writer-target" id="writer-target-form" aria-label="Поле для написания второй формы ключа"></div></div><p class="status-text" id="w-form-status" role="status">Обведи вторую форму</p></div><div class="inkpot-deco" aria-hidden="true"></div></div>
             <div class="stroke-progress"><div class="stroke-dots" id="w-dots" aria-hidden="true"></div><p class="progress-text" id="w-progress" aria-live="polite">Черта 0 из 4</p></div>
+            <div class="stroke-progress" id="w-form-bar" hidden><p class="progress-text" id="w-form-progress" aria-live="polite"></p></div>
             <div class="writer-actions"><button class="action-button" type="button" id="w-animate">Показать черты</button><button class="action-button primary" type="button" id="w-retry">Попробовать заново</button></div>
             <div class="success-msg" id="w-success" role="status" hidden>Ключ написан верно! Робо включает искры в честь твоего сердца-процессора!</div>
           </section>
