@@ -332,6 +332,14 @@
       background: #fff2cf; border-color: #0777a7;
       box-shadow: 0 0 0 3px #0777a7, 2px 2px 0 #191423;
     }
+    .ip-roles { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+    .ip-role { display: inline-flex; align-items: baseline; gap: 5px; font-size: 10.5px; font-weight: 800; line-height: 1.3; border: 1.5px solid; border-radius: 999px; padding: 3px 10px; }
+    .ip-role i { font-style: normal; font-family: "KaiTi", "STKaiti", "Noto Serif CJK SC", serif; font-size: 14px; line-height: 1; }
+    .ip-role.cat-sense { border-color: #0f8f86; background: #e2f6f3; color: #0b7a72; }
+    .ip-role.cat-shift { border-color: #c98a1f; background: #fdf0d2; color: #8a5a10; }
+    .ip-role.cat-form { border-color: #8a5fb8; background: #f2eafc; color: #6b3fa0; }
+    .ip-parts span.r-part.rc-shift { background: #fdf0d2; border-color: #c98a1f; color: #8a5a10; }
+    .ip-parts span.r-part.rc-form { background: #f2eafc; border-color: #8a5fb8; color: #6b3fa0; }
     .ip-ex-info { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; text-align: center; }
     .ip-ex-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
     .ip-ex-py { font-size: 18px; font-weight: 800; }
@@ -644,7 +652,7 @@
 
     <section class="level-section" id="inside" aria-labelledby="inside-title" hidden>
       <div class="section-head"><span class="level-badge n2">Этаж 2</span><h2 id="inside-title">Ключ в деле: как он прячется в иероглифах</h2></div>
-      <p class="level-lead">Выбери ключ на полке слева, затем <b>выбери одно из трёх слов</b>. Под знаком вопроса <b>собери иероглиф слова из кубиков</b> — нажимай их <b>в любом порядке</b>: бирюзовый кубик это сам ключ, сиреневые — вторые части. Соберёшь — слово вспыхнет на мольберте, а кубики расскажут свои роли.</p>
+      <p class="level-lead">Выбери ключ на полке слева, затем <b>выбери одно из трёх слов</b>. Под знаком вопроса <b>собери иероглиф слова из кубиков</b> — нажимай их <b>в любом порядке</b>: бирюзовый кубик это сам ключ, сиреневые — вторые части. Соберёшь — слово вспыхнет на мольберте, а кубики расскажут свои роли. Ярлык под кубиками — роль ключа в этом слове: <b>бирюзовый</b> — прямой смысл, <b>янтарный</b> — переносный, <b>фиолетовый</b> — осталась лишь форма.</p>
       <div class="cinnabon-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p>Правило мастерской: ключ отвечает за <b>смысл</b>, а вторая часть часто подсказывает <b>звучание</b>. Собери по иероглифу для каждого из трёх слов — и правило станет очевидным!</p></div>
       <div class="inside-grid">
         <div class="ip-shelf" id="inside-shelf" role="list" aria-label="Полка выбора ключа"></div>
