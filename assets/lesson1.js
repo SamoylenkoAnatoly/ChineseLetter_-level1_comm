@@ -207,12 +207,12 @@
     "Мастер бы гордился! Мяу!"
   ];
   var KOCO_LINES = [
-    "Хе-хе! Смотри, как просто, когда знаешь секрет…",
-    "Не смотри на посох — смотри на ключ!",
-    "Магия? Пфф. Просто ключ умеет переодеваться.",
-    "Не моргай — сейчас ключ сменит облик!",
-    "Звёзды шепчут: этот ключ — твой любимый.",
-    "Хитро придумано людьми, ничего не скажешь…"
+    "Слышишь? Тон — это мелодия слога. Не проспи её!",
+    "Хе-хе! Пропой вместе с кристаллом — он обожает дуэты.",
+    "Один ключ — одна песня. Десять ключей — целый концерт!",
+    "Голос вверх, голос вниз… тон решает всё!",
+    "Звёзды сегодня подпевают. А ты?",
+    "Попробуй «Медленно» — магия любит неторопливых."
   ];
   var NOTE_DEFAULT = "Собрано! Нажми на кубик — расскажу его роль";
   var FLOORS = ["hall", "inside", "practice", "tower", "final"];
@@ -236,9 +236,9 @@
       return n + " черт";
     }
 
-    function play(el, audio, text) {
+    function play(el, audio, text, rate) {
       if (window.HanziSite) {
-        if (audio) window.HanziSite.playAudio(audio, 1, text);
+        if (audio) window.HanziSite.playAudio(audio, rate || 1, text);
         else window.HanziSite.speak(text, 0.85);
       }
       if (el) {
@@ -316,72 +316,6 @@
 
     var inited = {};
 
-    var hallBubbleHTML = "";
-    (function () { var b = document.getElementById("cinnabon-bubble"); if (b) hallBubbleHTML = b.innerHTML; })();
-
-    var FLOOR_HEADERS = {
-      hall: {
-        theme: "room-hall", label: "Урок 1 · десять ключей", sign: "Мастерская<br>ключей",
-        img: "assets/cinnabon.svg", alt: "Кот Синнабон в доспехах", name: "Синнабон",
-        who: "Синнабон · мастер-каллиграф", what: "Урок 1 · ключи",
-        title: "Заходи! Сегодня учим десять главных ключей", bubble: hallBubbleHTML
-      },
-      inside: {
-        theme: "room-inside", label: "Этаж 2 · ключ в деле", sign: "Ключ<br>в деле",
-        img: "assets/characters/zhabert.svg", alt: "Жаберт — жаб-художник с кистью", name: "Жаберт",
-        who: "Жаберт · художник мастерской", what: "Этаж 2 · иероглифы",
-        title: "Квак! Смотри, из каких частей собраны слова",
-        bubble: "Квак! Я — <b>Жаберт</b>, здешний художник. Мой любимый сюжет — <b>слова в разрезе</b>: 河 «река» — это ключ <b>水 «вода»</b> плюс звуковая подсказка. Ключи прячутся внутри иероглифов и часто <b>меняют облик</b>. Выбирай ключ на полке — и соберём слово из кубиков!"
-      },
-      practice: {
-        theme: "room-practice", label: "Этаж 3 · письмо кистью", sign: "Письмо<br>кистью",
-        img: "assets/characters/robot.svg", alt: "Робот с жёлтой антенной и красным сердцем", name: "Робо",
-        who: "Робо · тренажёр письма", what: "Этаж 3 · письмо",
-        title: "Бип-буп! Пора писать кистью самому",
-        bubble: "Бип-буп! Я — <b>Робо</b>, тренажёр этого этажа. Программа проста: <b>одна черта — одно движение кисти</b>, без отрыва. Выбери ключ на полке сверху и обведи его по точкам в тетрадной клетке — я насчитаю черты и зажгу искры!"
-      },
-      tower: {
-        theme: "room-tower", label: "Этаж 4 · башня превращений", sign: "Башня<br>КоКо",
-        img: "assets/characters/wizard.svg", alt: "Хитрый маг КоКо в остроконечной шляпе со звездой", name: "КоКо",
-        who: "КоКо · хитрый маг превращений", what: "Этаж 4 · башня КоКо",
-        title: "Хе-хе! Узнай ключ в любом обличье",
-        bubble: "Хе-хе! Ты поднялся в мою <b>башню превращений</b>. Раскрою секрет: ключ — это <b>заклинание смысла</b>, а внутри иероглифа он <b>переодевается</b>: 水 превращается в 氵. Жми на руны — покажу все десять фокусов и открою путь к грамоте!"
-      },
-      final: {
-        theme: "room-final", label: "Этаж 5 · грамота подмастерья", sign: "Грамота<br>подмастерья",
-        img: "assets/cinnabon.svg", alt: "Кот Синнабон в доспехах", name: "Синнабон",
-        who: "Синнабон · мастер-каллиграф", what: "Этаж 5 · финал",
-        title: "Десять ключей — в кармане!",
-        bubble: "Ты дошёл(ла) до самого верха — <b>все десять ключей твои</b>! Загляни в грамоту подмастерья ниже — она с моей личной печатью. Теперь незнакомый иероглиф сам шепнёт, о чём он. Мур-р, держи блюдце молока!"
-      }
-    };
-
-    function applyHeader(id) {
-      var cfg = FLOOR_HEADERS[id];
-      if (!cfg) return;
-      var room = document.querySelector(".workshop-room");
-      if (room) {
-        room.classList.remove("room-inside", "room-practice", "room-tower", "room-final");
-        if (cfg.theme !== "room-hall") room.classList.add(cfg.theme);
-      }
-      var label = document.querySelector(".workshop-sign .sign-label");
-      if (label) label.textContent = cfg.label;
-      var sign = document.querySelector(".workshop-sign h1");
-      if (sign) sign.innerHTML = cfg.sign;
-      var hostImg = document.querySelector(".host img");
-      if (hostImg) { hostImg.src = cfg.img; hostImg.alt = cfg.alt; }
-      var hostName = document.querySelector(".host-name");
-      if (hostName) hostName.textContent = cfg.name;
-      var who = document.querySelector(".dialogue-heading span:first-child");
-      if (who) who.textContent = cfg.who;
-      var what = document.querySelector(".dialogue-heading span:last-child");
-      if (what) what.textContent = cfg.what;
-      var title = document.getElementById("welcome-title");
-      if (title) title.textContent = cfg.title;
-      var bubble = document.getElementById("cinnabon-bubble");
-      if (bubble) bubble.innerHTML = cfg.bubble;
-    }
-
     var showFloor = (function () {
       var visited = {};
       var buttons = Array.prototype.slice.call(document.querySelectorAll(".floor-track button"));
@@ -403,7 +337,8 @@
         });
         visited[FLOORS.indexOf(id)] = true;
         setCurrent(id);
-        applyHeader(id);
+        var workshop = document.getElementById("workshop-room");
+        if (workshop) workshop.hidden = id !== "hall";
         var section = document.getElementById(id);
         if (section && !noScroll) section.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
         if (id === "inside" && !inited.inside) { inited.inside = true; initInside(); }
@@ -421,6 +356,169 @@
     Array.prototype.forEach.call(document.querySelectorAll("[data-goto]"), function (btn) {
       btn.addEventListener("click", function () { showFloor(btn.getAttribute("data-goto")); });
     });
+
+    function croak() {
+      try {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        var ctx = new Ctx();
+        var oscillator = ctx.createOscillator();
+        var gain = ctx.createGain();
+        var start = ctx.currentTime;
+        oscillator.type = "sawtooth";
+        oscillator.frequency.setValueAtTime(150, start);
+        oscillator.frequency.exponentialRampToValueAtTime(80, start + 0.18);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.06, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.22);
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start(start);
+        oscillator.stop(start + 0.24);
+        oscillator.onended = function () { ctx.close().catch(function () {}); };
+      } catch (error) {}
+    }
+
+    function chime() {
+      try {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        var ctx = new Ctx();
+        [660, 990].forEach(function (freq, index) {
+          var oscillator = ctx.createOscillator();
+          var gain = ctx.createGain();
+          var start = ctx.currentTime + index * 0.03;
+          oscillator.type = "sine";
+          oscillator.frequency.value = freq;
+          gain.gain.setValueAtTime(0.0001, start);
+          gain.gain.exponentialRampToValueAtTime(index ? 0.05 : 0.08, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.9);
+          oscillator.connect(gain);
+          gain.connect(ctx.destination);
+          oscillator.start(start);
+          oscillator.stop(start + 1);
+        });
+        setTimeout(function () { ctx.close().catch(function () {}); }, 1300);
+      } catch (error) {}
+    }
+
+    (function initRoomDecor() {
+      var typeTimer = null;
+      var zapTimer = null;
+      var bellTimer = null;
+      var runesTimer = null;
+
+      function showReplica(btn) {
+        var replica = btn.querySelector(".hero-replica");
+        if (!replica) return;
+        clearTimeout(btn._replicaTimer);
+        replica.textContent = btn.getAttribute("data-spell") || "";
+        replica.classList.remove("show");
+        void replica.offsetWidth;
+        replica.classList.add("show");
+        btn._replicaTimer = setTimeout(function () { replica.classList.remove("show"); }, 1700);
+      }
+
+      function typeLine(target, text) {
+        clearInterval(typeTimer);
+        target.hidden = false;
+        if (reducedMotion) { target.textContent = text; return; }
+        var shown = 0;
+        target.textContent = "";
+        typeTimer = setInterval(function () {
+          shown++;
+          target.textContent = text.slice(0, shown);
+          if (shown >= text.length) clearInterval(typeTimer);
+        }, 24);
+      }
+
+      function castButton(btn, opts) {
+        btn.addEventListener("click", function () {
+          showReplica(btn);
+          if (opts && opts.sound) opts.sound();
+          if (opts && opts.typeInto) typeLine(opts.typeInto, btn.getAttribute("data-spell") || "");
+          if (reducedMotion) return;
+          clearTimeout(btn._castTimer);
+          btn.classList.remove("casting");
+          void btn.offsetWidth;
+          btn.classList.add("casting");
+          if (opts && opts.sparkle) sparkle(btn, 20);
+          btn._castTimer = setTimeout(function () { btn.classList.remove("casting"); }, 1600);
+        });
+      }
+
+      var zhabert = document.getElementById("zhabert-hero");
+      if (zhabert) castButton(zhabert, { sound: croak });
+      var robot = document.getElementById("robot-hero");
+      var powerLine = document.getElementById("power-line");
+      if (robot) castButton(robot, powerLine ? { typeInto: powerLine } : null);
+      var wizard = document.getElementById("wizard-hero");
+      if (wizard) castButton(wizard, { sparkle: true });
+
+      Array.prototype.forEach.call(document.querySelectorAll(".lily-hit"), function (pad) {
+        pad.addEventListener("click", function () {
+          if (reducedMotion) return;
+          pad.classList.remove("splash");
+          void pad.offsetWidth;
+          pad.classList.add("splash");
+          setTimeout(function () { pad.classList.remove("splash"); }, 1000);
+        });
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll(".power-bank"), function (bank) {
+        bank.addEventListener("click", function () {
+          if (reducedMotion) return;
+          bank.classList.remove("surge");
+          void bank.offsetWidth;
+          bank.classList.add("surge");
+          var rail = document.querySelector(".cable-rail");
+          if (rail) {
+            rail.classList.remove("zap");
+            void rail.offsetWidth;
+            rail.classList.add("zap");
+          }
+          clearTimeout(zapTimer);
+          zapTimer = setTimeout(function () {
+            bank.classList.remove("surge");
+            var liveRail = document.querySelector(".cable-rail");
+            if (liveRail) liveRail.classList.remove("zap");
+          }, 700);
+        });
+      });
+
+      var bell = document.getElementById("bell-btn");
+      if (bell) bell.addEventListener("click", function () {
+        chime();
+        if (reducedMotion) return;
+        clearTimeout(bellTimer);
+        bell.classList.remove("ringing");
+        void bell.offsetWidth;
+        bell.classList.add("ringing");
+        bellTimer = setTimeout(function () { bell.classList.remove("ringing"); }, 1000);
+        var windows = document.querySelectorAll(".arch-window");
+        clearTimeout(runesTimer);
+        Array.prototype.forEach.call(windows, function (win) {
+          win.classList.remove("runes-lit");
+          void win.offsetWidth;
+          win.classList.add("runes-lit");
+        });
+        runesTimer = setTimeout(function () {
+          Array.prototype.forEach.call(windows, function (win) { win.classList.remove("runes-lit"); });
+        }, 1300);
+      });
+
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          clearInterval(typeTimer);
+          clearTimeout(zapTimer);
+          clearTimeout(bellTimer);
+          clearTimeout(runesTimer);
+          Array.prototype.forEach.call(document.querySelectorAll(".casting, .splash, .surge, .zap, .ringing, .runes-lit"), function (node) {
+            node.classList.remove("casting", "splash", "surge", "zap", "ringing", "runes-lit");
+          });
+        }
+      });
+    })();
 
     var resetHall = function () {};
     var resetTower = function () {};
@@ -864,102 +962,132 @@
 
     function initTower() {
       var shelf = document.getElementById("tower-runes");
-      var scroll = document.getElementById("tower-scroll");
-      if (!shelf || !scroll) return;
       var count = document.getElementById("tower-count");
       var line = document.getElementById("tower-line");
       var gate = document.getElementById("tower-gate");
-      var cast = {};
-      var castCount = 0;
-      var START_LINE = "Выбери руну — и я приоткрою её тайну. Хе-хе!";
+      var sGlyph = document.getElementById("s-glyph");
+      var sPy = document.getElementById("s-py");
+      var sCap = document.getElementById("s-tone-cap");
+      var playBtn = document.getElementById("s-play");
+      var slowBtn = document.getElementById("s-slow");
+      var plotCap = document.getElementById("tone-plot-cap");
+      var path = document.getElementById("tone-path");
+      var dot = document.getElementById("tone-dot");
+      if (!shelf || !sGlyph || !path) return;
+      var heard = {};
+      var heardCount = 0;
+      var current = null;
+      var START_LINE = "Выбери руну на полке — и кристалл споёт её мелодию. Хе-хе!";
+      var TONE_PATHS = {
+        1: "M14 18 C 70 16, 150 18, 204 20",
+        2: "M14 58 C 60 46, 120 26, 204 12",
+        3: "M14 18 C 46 16, 76 50, 116 46 C 156 42, 176 14, 204 10",
+        4: "M14 12 C 60 26, 120 46, 204 58",
+        0: "M56 44 C 90 43, 130 44, 164 44"
+      };
+      var TONE_MELODY = {
+        1: "Мелодия 1-го тона: голос держится высоко и ровно, как гудок.",
+        2: "Мелодия 2-го тона: голос поднимается снизу вверх — как вопрос с удивлением.",
+        3: "Мелодия 3-го тона: голос ныряет вниз и снова взлетает — птица над водой.",
+        4: "Мелодия 4-го тона: голос падает сверху вниз — решительное «да!».",
+        0: "Нейтральный тон: коротко и тихо, без своей мелодии."
+      };
+      var rafId = null;
+      var hideTimer = null;
+      var animVersion = 0;
 
       function say(text) { if (line) line.textContent = text; }
 
-      function buildScroll(key) {
-        var box = el("div", null);
-
-        var head = el("div", "ts-head");
-        var glyph = el("span", "ts-glyph", key.ch);
-        glyph.setAttribute("lang", "zh-CN");
-        var meta = el("div", "ts-meta");
-        meta.appendChild(el("span", "ts-py tone-text " + toneClass(key.t), key.py));
-        meta.appendChild(el("span", "ts-mean", key.mean));
-        head.appendChild(glyph);
-        head.appendChild(meta);
-        head.appendChild(soundButton(key.audio, key.ch, "Послушать " + key.py));
-        box.appendChild(head);
-
-        var morph = el("div", "ts-morph");
-        var full = el("i", null, key.ch);
-        full.setAttribute("lang", "zh-CN");
-        morph.appendChild(full);
-        if (key.form !== key.ch) {
-          morph.appendChild(el("span", "ts-arrow", "→"));
-          var form = el("i", null, key.form);
-          form.setAttribute("lang", "zh-CN");
-          morph.appendChild(form);
-        }
-        box.appendChild(morph);
-
-        var note = el("p", "ts-form-note");
-        if (key.form !== key.ch) {
-          note.innerHTML = "<b>Фокус превращения:</b> ключ «" + key.mean + "» надевает облик <b>" + key.form + "</b> («" + key.formName + "») и встаёт " + key.pos + ".";
-        } else {
-          note.innerHTML = "<b>Фокус превращения:</b> этот ключ не переодевается — «" + key.mean + "» остаётся собой («" + key.formName + "», " + key.pos + ").";
-        }
-        box.appendChild(note);
-
-        var dl = el("dl", "ts-details");
-        var rows = [["Черт", strokesLabel(key.strokes)], ["В словаре", "№" + key.kx + " из 214"], ["Слов на этаже 2", String(key.ex.length)]];
-        rows.forEach(function (row) {
-          var d = el("div", "detail");
-          d.appendChild(el("dt", null, row[0]));
-          d.appendChild(el("dd", null, row[1]));
-          dl.appendChild(d);
-        });
-        box.appendChild(dl);
-
-        var ex = key.ex[0];
-        var word = el("div", "ts-word");
-        var wch = el("span", "w-ch", ex.ch);
-        wch.setAttribute("lang", "zh-CN");
-        var wmeta = el("div", "w-meta");
-        wmeta.appendChild(el("span", "w-py tone-text " + toneClass(ex.t), ex.py));
-        wmeta.appendChild(el("span", "w-tr", ex.tr));
-        word.appendChild(wch);
-        word.appendChild(wmeta);
-        word.appendChild(soundButton(ex.audio, ex.ch, "Слово"));
-        box.appendChild(word);
-
-        var pic = el("div", "ts-pic");
-        probeInto(pic, ex.ch, ex.py, ex.tr);
-        box.appendChild(pic);
-
-        return box;
+      function stopTone() {
+        animVersion++;
+        if (rafId !== null) cancelAnimationFrame(rafId);
+        clearTimeout(hideTimer);
+        rafId = null;
+        hideTimer = null;
+        dot.setAttribute("opacity", "0");
+        path.setAttribute("stroke", "#c9b4f2");
       }
 
-      function castRune(key, tile) {
-        scroll.replaceChildren(buildScroll(key));
-        play(tile, key.audio, key.ch);
-        if (cast[key.ch]) {
-          sparkle(tile, 16);
-          say(cast[key.ch]);
+      function animateTone(rate) {
+        stopTone();
+        var version = animVersion;
+        var len = path.getTotalLength();
+        var dur = 900 / (rate || 1);
+        var t0 = null;
+        if (reducedMotion) {
+          path.setAttribute("stroke", "#fb8c00");
+          hideTimer = setTimeout(stopTone, dur + 350);
           return;
         }
-        cast[key.ch] = KOCO_LINES[Math.floor(Math.random() * KOCO_LINES.length)];
-        castCount++;
+        var first = path.getPointAtLength(0);
+        dot.setAttribute("cx", first.x);
+        dot.setAttribute("cy", first.y);
+        dot.setAttribute("opacity", "1");
+        function frame(ts) {
+          if (version !== animVersion) return;
+          if (t0 === null) t0 = ts;
+          var t = Math.min((ts - t0) / dur, 1);
+          var ease = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+          var point = path.getPointAtLength(ease * len);
+          dot.setAttribute("cx", point.x);
+          dot.setAttribute("cy", point.y);
+          if (t < 1) rafId = requestAnimationFrame(frame);
+          else {
+            rafId = null;
+            hideTimer = setTimeout(function () { if (version === animVersion) stopTone(); }, 350);
+          }
+        }
+        rafId = requestAnimationFrame(frame);
+      }
+
+      function renderAltar(key) {
+        current = key;
+        sGlyph.textContent = key.ch;
+        sPy.textContent = key.py;
+        sPy.className = "pinyin-hero tone-text " + toneClass(key.t);
+        if (sCap) sCap.textContent = TONE_NAMES[key.t] + " · песня «" + key.mean + "»";
+        path.setAttribute("d", TONE_PATHS[key.t] || TONE_PATHS[0]);
+        if (plotCap) plotCap.textContent = TONE_MELODY[key.t] || TONE_MELODY[0];
+        if (playBtn) playBtn.disabled = false;
+        if (slowBtn) slowBtn.disabled = false;
+      }
+
+      function clearAltar() {
+        current = null;
+        sGlyph.textContent = "♪";
+        sPy.textContent = "выбери руну";
+        sPy.className = "pinyin-hero";
+        if (sCap) sCap.textContent = "Кристалл ждёт свою руну…";
+        path.setAttribute("d", TONE_PATHS[2]);
+        if (plotCap) plotCap.textContent = "Выбери руну — резонатор нарисует её мелодию.";
+        if (playBtn) playBtn.disabled = true;
+        if (slowBtn) slowBtn.disabled = true;
+        stopTone();
+      }
+
+      function pickRune(key, tile) {
+        renderAltar(key);
+        play(tile, key.audio, key.ch);
+        animateTone(1);
+        if (heard[key.ch]) {
+          sparkle(tile, 14);
+          return;
+        }
+        heard[key.ch] = true;
+        heardCount++;
         tile.classList.add("done");
-        count.textContent = "Заклинаний освоено " + castCount + " из " + KEYS.length;
+        count.textContent = "Мелодий освоено " + heardCount + " из " + KEYS.length;
         sparkle(tile, 34);
-        say(cast[key.ch]);
-        if (castCount === KEYS.length) {
+        if (heardCount === KEYS.length) {
           [0, 380, 760].forEach(function (delay) {
-            setTimeout(function () { sparkle(scroll, 50); }, delay);
+            setTimeout(function () { sparkle(shelf, 50); }, delay);
           });
-          say("Хе-хе-хе! Все десять заклинаний твои. Ступай на финальный этаж — Синнабон ждёт с грамотой!");
+          say("Хе-хе-хе! Все десять мелодий твои — целый концерт! Ступай на финальный этаж за грамотой.");
           gate.disabled = false;
           gate.classList.remove("gate-locked");
           gate.classList.add("pulse");
+        } else {
+          say(KOCO_LINES[Math.floor(Math.random() * KOCO_LINES.length)]);
         }
       }
 
@@ -967,25 +1095,37 @@
         var tile = el("button", "tower-rune");
         tile.type = "button";
         tile.setAttribute("role", "listitem");
-        tile.setAttribute("aria-label", "Заклинание ключа " + key.ch + " " + key.py + " («" + key.mean + "»)");
+        tile.setAttribute("aria-label", "Мелодия ключа " + key.ch + " " + key.py + " («" + key.mean + "»)");
         var hanzi = el("span", "r-hanzi", key.ch);
         hanzi.setAttribute("lang", "zh-CN");
         tile.appendChild(hanzi);
         tile.appendChild(el("span", "r-py", key.py));
-        tile.addEventListener("click", function () { castRune(key, tile); });
+        tile.addEventListener("click", function () { pickRune(key, tile); });
         shelf.appendChild(tile);
       });
+
+      if (playBtn) playBtn.addEventListener("click", function () {
+        if (!current) return;
+        play(playBtn, current.audio, current.ch);
+        animateTone(1);
+      });
+      if (slowBtn) slowBtn.addEventListener("click", function () {
+        if (!current) return;
+        play(slowBtn, current.audio, current.ch, 0.55);
+        animateTone(0.55);
+      });
+      document.addEventListener("visibilitychange", function () { if (document.hidden) stopTone(); });
 
       say(START_LINE);
 
       resetTower = function () {
-        cast = {};
-        castCount = 0;
+        heard = {};
+        heardCount = 0;
         Array.prototype.forEach.call(shelf.querySelectorAll(".tower-rune"), function (tile) {
           tile.classList.remove("done");
         });
-        count.textContent = "Заклинаний освоено 0 из " + KEYS.length;
-        scroll.replaceChildren(el("p", "ts-empty", "Свиток пока пуст… Выбери руну слева!"));
+        count.textContent = "Мелодий освоено 0 из " + KEYS.length;
+        clearAltar();
         gate.disabled = true;
         gate.classList.add("gate-locked");
         gate.classList.remove("pulse");
