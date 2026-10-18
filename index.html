@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#241b20">
+  <meta name="theme-color" content="#0f1830">
   <title>Урок 1. Ключи · Мастерская Синнабона</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
   <script src="assets/lesson1.js" defer></script>
   <style>
     :root {
-      --bg: #241b20;
+      --bg: #0f1830;
       --ink: #f5e8d3;
       --gold: #f4cc85;
       --teal: #80e5dc;
@@ -32,7 +32,7 @@
     body {
       margin: 0;
       font-family: "Nunito", "Noto Sans SC", "Segoe UI", sans-serif;
-      background: radial-gradient(ellipse at 50% 0, #4a3226, transparent 60%), #241b20;
+      background: radial-gradient(ellipse at 50% 0, #2c3f73, transparent 60%), #0f1830;
       color: var(--ink);
       overflow-wrap: anywhere;
     }
@@ -41,33 +41,58 @@
     button:focus-visible, a:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
     [hidden] { display: none !important; }
     h1, h2, h3, p { margin: 0; }
-    .hanzi-inline { font-family: "Noto Sans SC", sans-serif; font-weight: 400; }
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image:
+        radial-gradient(circle 1.6px at 6% 14%, #ffe9b0 99%, transparent 100%),
+        radial-gradient(circle 1.3px at 14% 46%, #cfe0ff 99%, transparent 100%),
+        radial-gradient(circle 1.8px at 21% 78%, #fff2d9 99%, transparent 100%),
+        radial-gradient(circle 1.2px at 29% 22%, #a8c0ff 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 37% 60%, #ffe9b0 99%, transparent 100%),
+        radial-gradient(circle 1.3px at 44% 34%, #cfe0ff 99%, transparent 100%),
+        radial-gradient(circle 1.7px at 52% 12%, #fff2d9 99%, transparent 100%),
+        radial-gradient(circle 1.2px at 61% 52%, #a8c0ff 99%, transparent 100%),
+        radial-gradient(circle 1.6px at 68% 26%, #ffe9b0 99%, transparent 100%),
+        radial-gradient(circle 1.3px at 76% 66%, #cfe0ff 99%, transparent 100%),
+        radial-gradient(circle 1.8px at 84% 18%, #fff2d9 99%, transparent 100%),
+        radial-gradient(circle 1.2px at 91% 44%, #a8c0ff 99%, transparent 100%),
+        radial-gradient(circle 1.5px at 96% 74%, #ffe9b0 99%, transparent 100%),
+        radial-gradient(circle 1.4px at 48% 88%, #cfe0ff 99%, transparent 100%);
+      animation: skyTwinkle 5.5s ease-in-out infinite alternate;
+    }
+    body::after {
+      content: ""; position: fixed; top: 92px; right: 5vw; z-index: -1; pointer-events: none;
+      width: 26px; height: 26px; background: #f2e6c8;
+      box-shadow: 6px 0 #f2e6c8, -6px 0 #f2e6c8, 0 6px #f2e6c8, 0 -6px #f2e6c8, 0 0 30px 8px #f2e6c840;
+    }
+    @keyframes skyTwinkle { 0% { opacity: .55; } 100% { opacity: 1; } }
+.hanzi-inline { font-family: "Noto Sans SC", sans-serif; font-weight: 400; }
     .lesson-shell {
       max-width: 1020px;
       margin: 0 auto;
       padding: max(14px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) max(26px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
     }
-    .skip-link { position: fixed; top: -150px; left: 14px; z-index: 100; background: #2e2229; border: 3px solid var(--gold); color: #fff; padding: 12px; max-width: calc(100% - 28px); }
+    .skip-link { position: fixed; top: -150px; left: 14px; z-index: 100; background: #1a2444; border: 3px solid var(--gold); color: #fff; padding: 12px; max-width: calc(100% - 28px); }
     .skip-link:focus { top: 14px; }
 
     .topbar {
       position: sticky; top: 0; z-index: 20;
       display: flex; align-items: center; justify-content: space-between; gap: 14px;
       padding: 8px 12px; margin: 0 0 16px;
-      background: #2b2027ee;
-      border: 3px solid #4d3b45; border-radius: 10px;
-      color: #d8c6b8; font-size: 11.5px;
+      background: #1a2444ee;
+      border: 3px solid #3e5384; border-radius: 10px;
+      color: #cdd8f0; font-size: 11.5px;
       backdrop-filter: blur(4px);
     }
     .route-label { display: flex; align-items: center; gap: 10px; font-weight: 800; }
-    .route-label::before { content: ""; width: 8px; height: 8px; background: var(--gold); box-shadow: 0 0 0 3px #574433; flex-shrink: 0; }
+    .route-label::before { content: ""; width: 8px; height: 8px; background: var(--gold); box-shadow: 0 0 0 3px #3e5384; flex-shrink: 0; }
     .floor-track { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
     .floor-track button {
-      --c: #d8c6b8;
+      --c: #cdd8f0;
       position: relative;
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 10px 4px 7px; background: #463339; border: 0; border-bottom: 3px solid #191218;
-      color: #d8c6b8; font-size: 10.5px; font-weight: 800; border-radius: 4px 4px 0 0;
+      padding: 4px 10px 4px 7px; background: #253258; border: 0; border-bottom: 3px solid #0a1024;
+      color: #cdd8f0; font-size: 10.5px; font-weight: 800; border-radius: 4px 4px 0 0;
       transition: background .12s ease, color .12s ease, transform .12s ease;
     }
     .floor-track button .f-ico { display: inline-flex; width: 13px; height: 13px; color: var(--c); flex-shrink: 0; }
@@ -77,8 +102,8 @@
       min-width: 16px; height: 16px; padding: 0 2px; font-size: 9.5px;
       background: var(--c); color: #241b20; border-radius: 3px; box-shadow: 1px 1px 0 #191218;
     }
-    .floor-track button:hover { background: #57414a; }
-    .floor-track button.done { background: #57414a; }
+    .floor-track button:hover { background: #33436f; }
+    .floor-track button.done { background: #33436f; }
     .floor-track button.done .f-num { background: transparent; border: 2px solid var(--c); box-shadow: none; color: var(--c); }
     .floor-track button.done .f-label { opacity: .8; }
     .floor-track button.current {
@@ -168,12 +193,12 @@
     .work-lamp::after { content: ""; position: absolute; left: -6px; right: -6px; bottom: -6px; height: 4px; background: #b88b67; box-shadow: 0 -34px #b88b67; }
     .work-lamp.left { left: -8px; }
     .work-lamp.right { right: -8px; }
-    .floor { height: 24px; border-top: 6px solid #342535; background: repeating-linear-gradient(90deg, #6b4a49 0 96px, #46333c 96px 100px); box-shadow: inset 0 -4px #493341; }
+    .floor { height: 24px; border-top: 6px solid #0e1531; background: repeating-linear-gradient(90deg, #2c3a63 0 96px, #1d2848 96px 100px); box-shadow: inset 0 -4px #232f52; }
 
     .level-section {
       position: relative; margin-top: 26px; padding: 20px 22px 24px;
-      background: #261d25; border: 4px solid #4d3b45; border-radius: 6px;
-      box-shadow: 0 0 0 3px #191218, 6px 6px #0f0c12;
+      background: #141d3a; border: 4px solid #3e5384; border-radius: 6px;
+      box-shadow: 0 0 0 3px #0a1024, 6px 6px #070b18;
       scroll-margin-top: 68px;
     }
     .section-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
@@ -186,7 +211,7 @@
     .level-section h2 { font-size: clamp(18px, 2.6vw, 24px); color: #ffe9c4; line-height: 1.25; }
     .level-lead { color: #d9c8c0; font-size: 12.5px; line-height: 1.55; margin: 6px 0 2px; max-width: 760px; }
     .level-lead b { color: #fff2d9; }
-    .floor-tip { display: flex; align-items: center; gap: 12px; margin: 12px 0 14px; padding: 9px 13px; background: #2c222c; border: 3px solid #5c473f; border-radius: 10px; }
+    .floor-tip { display: flex; align-items: center; gap: 12px; margin: 12px 0 14px; padding: 9px 13px; background: #1b2748; border: 3px solid #3e5384; border-radius: 10px; }
     .floor-tip img { width: 46px; height: 46px; flex-shrink: 0; image-rendering: pixelated; filter: drop-shadow(2px 2px #201a2b); }
     .floor-tip p { font-size: 12px; line-height: 1.5; color: #e8dccc; }
     .floor-tip p b { color: var(--gold); }
@@ -754,7 +779,7 @@
     .dip-seal img { width: 40px; height: 40px; image-rendering: pixelated; filter: drop-shadow(1px 1px #00000055); }
     .dip-sign { font-family: "KaiTi", "STKaiti", serif; font-size: 22px; color: #8a2f28; }
 
-    .hall-rack { position: relative; padding: 12px 14px 14px; background: #2c222c; border: 3px solid #5c473f; border-radius: 8px; }
+    .hall-rack { position: relative; padding: 12px 14px 14px; background: #1b2748; border: 3px solid #3e5384; border-radius: 8px; }
     .hall-rack::before { content: ""; position: absolute; left: 14px; right: 14px; top: 5px; height: 3px; background: repeating-linear-gradient(90deg, #8a6250 0 22px, transparent 22px 30px); opacity: .8; }
     .hall-rack-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
     .hall-count { padding: 4px 10px; background: #3a2a35; border: 2px solid #b08d5c; border-radius: 8px; color: var(--gold); font-size: 11px; font-weight: 800; }
@@ -1170,6 +1195,10 @@
       <div class="floor-tip"><img src="assets/cinnabon.svg" alt="" width="46" height="46"><p id="final-bubble">Ты прошёл(ла) все этажи мастерской и перехитрил(а) даже мага КоКо! Теперь, встретив незнакомый иероглиф, сначала ищи в нём знакомый ключ — он шепнёт, о чём этот знак. Держи блюдце молока!</p></div>
       <div class="diploma" id="diploma" aria-label="Грамота подмастерья мастерской ключей"></div>
       <div class="finale-actions"><button class="action-button primary" type="button" id="restart-btn">Пройти урок заново</button></div>
+      <div class="finale-actions" style="margin-top: 14px; gap: 12px; flex-wrap: wrap;">
+        <a class="action-button" href="Задание 1/index.html" style="text-decoration: none; display: inline-flex; align-items: center;">Задание 1 · Испытание ключей →</a>
+        <a class="action-button primary" href="Задание 2/index.html" style="text-decoration: none; display: inline-flex; align-items: center;">Задание 2 · Дело чайного дома →</a>
+      </div>
     </section>
 
     <footer class="lesson-footer">
